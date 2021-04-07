@@ -1,0 +1,141 @@
+<div class="d-flex flex-column">
+	<div class="col-12 mb-2">
+		<h2 class="mb-3 text-secondary"> <i class="bi bi-clipboard-check fs-5"></i> <span> Results</span> </h2>
+		<hr>
+	</div>
+
+	<div class="d-flex maxWidthWithScroll gap-4">
+		<div class="col-12 d-flex flex-column align-items-center gap-2" *ngIf="testsuites.length < 1">
+			<p class="text-primary p-5 m-5">No test suites defined!</p>
+		</div>
+
+		<ng-container *ngIf="testsuites.length > 0">
+			<div class="col-2">
+				<div class="list-group" *ngIf="testsuites?.length < 1">
+					<span class="text-secondary">No testsuites found!</span>
+				</div>
+				<div class="list-group" *ngIf="testsuites?.length > 0">
+					<button type="button" class="list-group-item list-group-item-action"
+						[ngClass]="{'active': selectedTestsuite._id == ts._id}" (click)="menuClick(ts)"
+						*ngFor="let ts of testsuites">{{ts._id}}</button>
+				</div>
+			</div>
+
+			<div class="col-3 d-flex flex-column">
+				<div class="mb-3 d-flex justify-content-center">
+					<button class="btn btn-success btn-sm buttondoublewidth" (click)="runTest()">Run tests</button>
+				</div>
+				<div class="list-group text-center" *ngIf="resultSummary?.length < 1">
+					<span class="text-secondary">No test results found!</span>
+				</div>
+				<div class="list-group" *ngIf="resultSummary?.length > 0">
+					<div class="list-group-item fakeLink"
+						[ngClass]="{'list-group-item-primary': selectedResultSummary._id == rs._id}"
+						(click)="menuClickResultSummary(rs)" *ngFor="let rs of resultSummary">
+						<div class="d-flex w-100 justify-content-between"></div>
+						<h6 class="mb-1"><small>{{rs._id}}</small></h6>
+						<span class="me-1 badge bg-dark">{{rs.tests}}</span>
+						<span class="me-1 badge bg-success">{{rs.pass}}</span>
+						<span class="me-1 badge bg-danger">{{rs.fail}}</span>
+						<span class="me-1 float-end">
+							<small class="badge bg-warning text-dark" *ngIf="rs.status == 'Pending'">{{rs.status}}</small>
+							<small class="badge bg-success text-light" *ngIf="rs.status == 'Completed'">{{rs.status}}</small>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="d-flex flex-column" style="width: 30rem;">
+				<div class="d-flex flex-row border border-dark p-1">
+					<small style="width: 8rem;" class="fw-bold">Result ID</small>
+					<small style="width: 15rem;" class="fw-bold">Test ID</small>
+					<small style="width: 5rem;" class="fw-bold">Status</small>
+					<!-- <small style="width: 60%;" class="fw-bold">Data</small> -->
+				</div>
+				<div class="d-flex flex-row p-1 fakeLink resultHover" *ngFor="let result of results"
+					[ngClass]="{'list-group-item-danger': result.status == 'FAIL', 'list-group-item-success': result.status == 'PASS'}"
+					(click)="menuClickResult(result)">
+					<small style="width: 8rem;">{{result._id}}</small>
+					<small style="width: 15rem;">{{result.test}}</small>
+					<small style="width: 5rem;">
+						<span *ngIf="result.status == 'PASS'" class="badge bg-success">{{result.status}}</span>
+						<span *ngIf="result.status == 'FAIL'" class="badge bg-danger">{{result.status}}</span>
+					</small>
+				</div>
+				<div class="d-flex flex-row justify-content-center mb-1 p-1">
+					<button class="btn btn-outline-secondary btn-sm">Load more...</button>
+				</div>
+			</div>
+
+			<div class="col-6 card" *ngIf="selectedResult" id="resultView"
+				[ngClass]="{'border-danger': selectedResult.status == 'FAIL', 'border-success': selectedResult.status == 'PASS'}">
+				<div class="card-header">
+					<span *ngIf="selectedResult.status == 'PASS'" class="me-2 badge bg-success">{{selectedResult.status}}</span>
+					<span *ngIf="selectedResult.status == 'FAIL'" class="me-2 badge bg-danger">{{selectedResult.status}}</span>
+					<span><strong>Result ID</strong> {{selectedResult._id}}</span>
+				</div>
+				<div class="card-body">
+					<div class="d-flex flex-column p-2 border mb-2">
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">Test suite</div>
+							<div>{{selectedResult.testSuite}}</div>
+						</div>
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">Result summary ID</div>
+							<div>{{selectedResult.resultSummary}}</div>
+						</div>
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">Start date</div>
+							<div>{{selectedResult.startDate | date:'medium'}}</div>
+						</div>
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">End date</div>
+							<div>{{selectedResult.endDate | date:'medium'}}</div>
+						</div>
+						<div class="mb-1 d-flex flex-row text-danger" *ngIf="selectedResult.status == 'FAIL'">
+							<div class="me-2 resultLeft">Comment</div>
+							<div>{{selectedResult.comment}}</div>
+						</div>
+					</div>
+					<div class="d-flex flex-column p-2 border">
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">API</div>
+							<div><span class="badge bg-dark me-1">{{selectedResult.method}}</span>{{selectedResult.uri}}</div>
+						</div>
+						<div class="mb-1 d-flex flex-row">
+							<div class="me-2 resultLeft">Expected status</div>
+							<div>
+								<span *ngIf="selectedResult.expectedStatus == 200"
+									class="badge bg-success">{{selectedResult.expectedStatus}}</span>
+								<span *ngIf="selectedResult.expectedStatus == 404"
+									class="badge bg-danger">{{selectedResult.expectedStatus}}</span>
+							</div>
+						</div>
+						<div class="mb-1 d-flex flex-column">
+							<div class="me-2 resultLeft">Payload</div>
+							<div class="p-2 bg-light border"><small>{{stringifiedData(selectedResult.data)}}</small></div>
+						</div>
+						<div class="mb-1 d-flex flex-row mt-2">
+							<div class="me-2 resultLeft">Response status</div>
+							<div>
+								<span *ngIf="selectedResult.responseStatus == 200"
+									class="badge bg-success">{{selectedResult.responseStatus}}</span>
+								<span *ngIf="selectedResult.responseStatus != 200"
+									class="badge bg-danger">{{selectedResult.responseStatus}}</span>
+							</div>
+						</div>
+						<div class="mb-1 d-flex flex-column">
+							<div class="me-2 resultLeft">Response headers</div>
+							<div class="p-2 bg-light border"><small>{{stringifiedData(selectedResult.responseHeaders)}}</small></div>
+						</div>
+						<div class="mb-1 d-flex flex-column">
+							<div class="me-2 resultLeft">Response</div>
+							<div class="p-2 bg-light border"><small>{{stringifiedData(selectedResult.response)}}</small></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+
+</div>

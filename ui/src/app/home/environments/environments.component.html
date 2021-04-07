@@ -1,0 +1,176 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12 mb-3">
+			<h2 class="mb-3 text-dark"><i class="bi bi-hdd-rack"></i> Environments</h2>
+			<hr>
+		</div>
+		<div class="col-2">
+			<div class="d-grid gap-2">
+				<button class="btn btn-outline-primary" (click)="showAddEnvironment(false)">
+					<i class="bi bi-cloud-plus"></i> Add environment
+				</button>
+			</div>
+			<div class="my-3 text-center text-muted" *ngIf="spinner.add">
+				<small>Fetching environments <span class="spinner-grow spinner-grow-sm text-dark" role="status"
+						aria-hidden="true"></span></small>
+			</div>
+			<div class="list-group mt-4">
+				<ng-container *ngFor="let environment of environments">
+					<button type="button" class="list-group-item list-group-item-action" (click)="setEnvironment(environment)"
+						[ngClass]="{'active':selectedEnvironment._id == environment._id}">{{environment._id}}</button>
+				</ng-container>
+			</div>
+		</div>
+		<div class="col-10">
+			<!-- SHOW ENV -->
+			<ng-container *ngIf="!addView">
+				<div class="card" *ngIf="!spinner.add && environments.length == 0 ">
+					<div class="card-body text-center p-5">
+						<p>No environments found. Let's start by adding a new environment.</p>
+						<button class="btn btn-success" (click)="showAddEnvironment(false)">
+							<i class="bi bi-cloud-plus"></i> Add environment
+						</button>
+					</div>
+				</div>
+
+				<div *ngIf="selectedEnvironment">
+					<nav class="navbar navbar-expand-lg bg-secondary border bg-light">
+						<div class="container-fluid">
+							<h4>{{selectedEnvironment._id}}</h4>
+							<div class="d-flex">
+								<small class="text-danger mx-2" *ngIf="errors.remove">Error removing environment!</small>
+								<button class="btn btn-sm btn-outline-danger buttonwidth mx-2" (click)="deleteConfirmation = true">
+									Delete </button>
+								<button class="btn btn-sm btn-success buttonwidth" (click)="showAddEnvironment(true)"> Edit </button>
+							</div>
+						</div>
+					</nav>
+					<nav class="d-flex justify-content-end p-2 bg-warning shadow" *ngIf="deleteConfirmation">
+						<span class="text-dark fs-5">Are you sure?</span>
+						<button class="btn btn-sm btn-dark buttonwidth mx-2" (click)="deleteConfirmation = false">Cancel</button>
+						<button class="btn btn-sm btn-danger buttonwidth mx-2" (click)="deleteEnvironment(selectedEnvironment._id)">
+							<span class="spinner-grow spinner-grow-sm text-dark" role="status" aria-hidden="true"
+								*ngIf="spinner.remove"></span> YES</button>
+					</nav>
+					<div class="card-body">
+						<dl class="row">
+							<dt class="col-sm-3">URL</dt>
+							<dd class="col-sm-9">{{selectedEnvironment.url}}</dd>
+							<dt class="col-sm-3">Username</dt>
+							<dd class="col-sm-9">{{selectedEnvironment.username}}</dd>
+							<dt class="col-sm-3">Password</dt>
+							<dd class="col-sm-9">*******</dd>
+							<dt class="col-sm-3">App</dt>
+							<dd class="col-sm-9">{{selectedEnvironment.app}}</dd>
+							<dt class="col-sm-3">Dataservices</dt>
+							<dd class="col-sm-9">
+								<ng-container *ngFor="let ds of selectedEnvironment.dataservices"><span
+										class="badge bg-dark mx-1">{{ds.name}}</span></ng-container>
+							</dd>
+						</dl>
+						<!-- <h5>Data services</h5> -->
+					</div>
+				</div>
+
+			</ng-container>
+
+			<!-- ADD NEW ENV -->
+			<div *ngIf="addView">
+				<nav class="navbar navbar-expand-lg bg-secondary border bg-light">
+					<div class="container-fluid">
+						<h4>Add new environment</h4>
+						<div class="d-flex">
+							<small class="text-danger mx-2" *ngIf="errors.add">Error saving environment!</small>
+							<button class="btn btn-sm btn-outline-danger mx-2 buttonwidth" (click)="cancelAddEnvironment()"> Cancel
+							</button>
+							<button class="btn btn-sm btn-success buttonwidth" (click)="addEnvironment()"
+								[disabled]="!activateSaveButton()">
+								<span class="spinner-grow spinner-grow-sm text-light" role="status" aria-hidden="true"
+									*ngIf="spinner.add"></span>
+								<span *ngIf="!editMode">Add</span>
+								<span *ngIf="editMode">Save</span>
+							</button>
+						</div>
+					</div>
+				</nav>
+				<div class="card-body">
+					<form [formGroup]="formEnvironment">
+
+						<div class="mb-3 col-4">
+							<label for="environmentName" class="form-label">Name of environment <small
+									class="text-danger">*</small></label>
+							<input type="text" class="form-control" id="environmentName" formControlName="_id">
+						</div>
+
+						<div class="d-flex flex-row">
+							<!-- CONNECTION DETAILS -->
+							<div class="card col-5">
+								<h5 class="card-header">Connection details <small class="badge bg-dark float-end">Step 1/3</small></h5>
+								<div class="card-body">
+									<div class="mb-3">
+										<label for="environmentURL" class="form-label">URL</label>
+										<input type="text" class="form-control" id="environmentURL" formControlName="url">
+									</div>
+									<div class="row g-3">
+										<div class="col-6">
+											<label for="adminUsername" class="form-label">Username</label>
+											<input type="text" class="form-control" id="adminUsername" formControlName="username">
+										</div>
+										<div class="col-6">
+											<label for="adminPassword" class="form-label">Password</label>
+											<input type="password" class="form-control" id="adminPassword" formControlName="password">
+										</div>
+									</div>
+									<small class="mb-1 text-danger" *ngIf="errors.app">{{errors.app}}</small>
+
+									<button class="btn btn-warning btn-sm float-end mt-2" (click)="fetchApps()">
+										<i class="bi bi-box-arrow-down-left" *ngIf="!spinner.fetchApp"></i>
+										<span class="spinner-grow spinner-grow-sm text-light" role="status" aria-hidden="true"
+											*ngIf="spinner.fetchApp"></span>
+										Fetch Apps
+									</button>
+								</div>
+							</div>
+
+							<!-- APP LIST -->
+							<div class="card col-3 mx-1" *ngIf="appList.length > 0">
+								<h5 class="card-header">App <small class="badge bg-dark float-end">Step 2/3</small></h5>
+								<div class="card-body">
+									<ng-container *ngFor="let app of appList">
+										<button type="button" class="btn btn-sm m-1"
+											[ngClass]="{'btn-outline-primary':selectedApp != app, 'btn-primary':selectedApp == app}"
+											(click)="appSelect(app)">
+											<span class="spinner-grow spinner-grow-sm text-light" role="status" aria-hidden="true"
+												*ngIf="spinner.fetchDataService && selectedApp == app"></span>
+											{{app}}
+										</button>
+									</ng-container>
+									<small class="mb-1 text-danger" *ngIf="errors.dataservice">{{errors.dataservice}}</small>
+								</div>
+								<div class="card-footer" *ngIf="selectedApp">
+									<small><span class="text-muted">Selected app :</span>&nbsp;<span
+											class="text-danger">{{selectedApp}}</span></small>
+								</div>
+							</div>
+
+							<!-- DATA SERVICE LIST -->
+							<div class="card col-4 mx-1" *ngIf="dataserviceList.length > 0">
+								<h5 class="card-header">DataServices <small class="badge bg-dark float-end">Step 3/3</small></h5>
+								<div class="card-body">
+									<button type="button" class="btn btn-sm m-1"
+										[ngClass]="{'btn-outline-dark':!dataServiceHasBeenSelected(ds._id), 'btn-dark':dataServiceHasBeenSelected(ds._id)}"
+										(click)="dataServiceSelect(ds)" *ngFor="let ds of dataserviceList"> {{ds.name}} </button>
+								</div>
+								<div class="card-footer" *ngIf="selectedApp">
+									<small><span class="text-danger">{{selectedDataservices.length}}</span>&nbsp;<span
+											class="text-muted">selected.</span> </small>
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

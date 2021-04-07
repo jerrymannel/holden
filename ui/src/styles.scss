@@ -1,0 +1,47 @@
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.shadow {
+  box-shadow: 0px 0px 4px rgba(#000, 0.16);
+}
+
+.buttonwidth {
+  width: 6rem;
+}
+
+.buttondoublewidth {
+  width: 12rem;
+}
+
+.deleteItem{
+  cursor: pointer;
+  
+  :hover{
+    color: red;
+  }
+}
+
+.height {
+  height: 60vh;
+}
+
+.fakeLink {
+  cursor: pointer;
+}
+
+.maxWidthWithScroll {
+  overflow-x: scroll;
+}
+
+.resultHover {
+  margin-bottom: 1px;
+  &:hover {
+    background-color: rgba(#0d6efd, 0.50);
+    color: #000;
+  }
+}
+
+.resultLeft {
+  width: 10rem;
+}
