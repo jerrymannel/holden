@@ -73,7 +73,10 @@ router.post("/login", async (_req, _res) => {
 		if (savedData.password != calculatedPassword) return apiClient.handleError(Error("Invalid credentials"), _res)
 
 		const token = jwt.sign({ username: data.username }, jwtSecret, { expiresIn: tokenExpiry })
-		_res.json({ token: token })
+		_res.json({
+			_id: data.username,
+			token: token
+		})
 	} catch (_err) {
 		apiClient.handleError(Error("Invalid credentials"), _res)
 	}

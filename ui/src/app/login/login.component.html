@@ -6,21 +6,19 @@
 				<span>API Test Framework</span>
 			</div>
 			<div class="card-text px-5">
-				<form>
-					<div class="mb-3">
-						<label for="username" class="form-label">Username</label>
-						<input type="text" class="form-control" id="username" placeholder="username">
+				<div class="mb-3">
+					<label for="username" class="form-label">Username</label>
+					<input type="text" class="form-control" id="username" placeholder="username" [(ngModel)]="username">
+				</div>
+				<div class="mb-3">
+					<label for="password" class="form-label">Password</label>
+					<input type="password" class="form-control" id="password" placeholder="password" [(ngModel)]="password">
+				</div>
+				<div class="mb-3">
+					<div class="d-grid gap-2 col-6 mx-auto">
+						<button class="btn btn-primary" (click)="login()">Login</button>
 					</div>
-					<div class="mb-3">
-						<label for="password" class="form-label">Password</label>
-						<input type="password" class="form-control" id="password" placeholder="password">
-					</div>
-					<div class="mb-3">
-						<div class="d-grid gap-2 col-6 mx-auto">
-							<button class="btn btn-primary" (click)="login()">Login</button>
-						</div>
-					</div>
-				</form>
+				</div>
 			</div>
 			<div class="text-center mt-5 text-secondary font-monospace">
 				<small>v{{version}}</small>

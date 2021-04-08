@@ -35,7 +35,7 @@ export class CommonService {
   private _getHeaders() {
     const httpHeaders = new HttpHeaders()
       .set('Content-Type', 'application/json; version=2')
-      .set('Authorization', 'JWT ' + this.getToken());
+      .set('Authorization', 'Bearer ' + this.getToken());
     return httpHeaders;
   }
 

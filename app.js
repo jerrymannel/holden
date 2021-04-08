@@ -31,6 +31,8 @@ app.use((_req, _res, _next) => {
 	_next()
 })
 
+app.get("/api/version", (_req, _res) => _res.json({ version: version }))
+
 app.use(async (_req, _res, _next) => {
 	// deliberately kept the following lines like this
 	if (process.env.LOG_LEVEL == "debug" && process.env.AUTH_BYPASS == "true") {
@@ -47,8 +49,6 @@ app.use(async (_req, _res, _next) => {
 		return _res.status(403).json({ "message": "Invalid session" })
 	}
 })
-
-app.get("/api/version", (_req, _res) => _res.end(version))
 
 app.use("/api/user", userRouter);
 app.use("/api/environment", environmentRouter);

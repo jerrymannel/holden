@@ -11,6 +11,8 @@ import { CommonService } from '../utils/common.service';
 export class LoginComponent implements OnInit {
 
   version = '1.0.0';
+  username: string;
+  password: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -19,7 +21,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.router.navigate(['home']);
+    // this.router.navigate(['home']);
     this.commonservice.get('version', '', null)
     .subscribe(
       version => this.version = version,
@@ -28,7 +30,16 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    this.router.navigate(['home']);
+    // this.router.navigate(['home']);
+    const data = {
+      username: this.username,
+      password: this.password
+    };
+    this.commonservice.post('user', '/login', data)
+    .subscribe(
+      loginResponse => this.commonservice.saveSessionData(loginResponse),
+      err => console.error(err)
+    );
   }
 
 }
