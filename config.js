@@ -1,19 +1,16 @@
 const mongodb = require("mongodb")
 
 module.exports = {
-	"datastack": {
-		"URL": process.env.URL || "https://localhost",
-		"USERNAME": process.env.USERNAME || "admin",
-		"PASSWORD": process.env.PASSWORD || "password"
-	},
 	"db": {
 		"MONGOURL": process.env.MONGOURL ? process.env.MONGOURL : 'mongodb://localhost:27017',
-		"DB_NAME": process.env.DB_NAME ? process.env.DB_NAME : "dataStackTests",
+		"DB_NAME": process.env.DB_NAME ? process.env.DB_NAME : "holden",
 		"clinetOptions": {
 			"readPreference": mongodb.ReadPreference.SECONDARY_PREFERRED,
 			"useUnifiedTopology": true
 		}
 	},
+	"jwt": "iaIowOtVZcWxeD9UdltaZi77rZ7TAfPTJAE0CR5Y",
+	"tokenExpiry": process.env.TOKEN_EXPIRY || 3600,
 	"logging": {
 		"loglevel": process.env.LOG_LEVEL || "info",
 		"options": {
@@ -30,12 +27,5 @@ module.exports = {
 				}
 			}
 		}
-	},
-	"apis": {
-		'login': `/api/a/rbac/login`,
-		'logout': `/api/a/rbac/logout`,
-		'check': `/api/a/rbac/check`,
-		'app': `/api/a/rbac/app`,
-		'sm': `/api/a/sm/service`
 	}
 }
