@@ -54,13 +54,8 @@ export class CommonService {
   }
 
   logout(): void {
-    this.delete('user', '/logout').subscribe(
-      () => {
-        this.clearSession();
-        this.router.navigate(['']);
-      },
-      err => console.error(err)
-    );
+    this.clearSession();
+    this.router.navigate(['']);
   }
 
   get(type, url, options?: GetOptions): Observable<any> {

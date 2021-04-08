@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../utils/auth.guard';
-import { DatasetComponent } from './dataset/dataset.component';
-import { EnvironmentsComponent } from './environments/environments.component';
 import { HomeComponent } from './home.component';
 import { TestsComponent } from './tests/tests.component';
 import { ResultsComponent } from './results/results.component';
+import { TestbucketComponent } from './testbucket/testbucket.component';
+import { UsersComponent } from './users/users.component';
 
 
 const routes: Routes = [
   {
     path: '', component: HomeComponent, children: [
-      { path: '', pathMatch: 'full', redirectTo: 'env' },
-      { path: 'env', component: EnvironmentsComponent },
+      { path: '', pathMatch: 'full', redirectTo: 'tests' },
       { path: 'tests', component: TestsComponent },
-      { path: 'dataset', component: DatasetComponent },
-      { path: 'results', component: ResultsComponent }
+      { path: 'testbucket', component: TestbucketComponent },
+      { path: 'results', component: ResultsComponent },
+      { path: 'user', component: UsersComponent }
     ],
     canActivateChild: [AuthGuard]
   }

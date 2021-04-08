@@ -11,17 +11,20 @@ export class HomeComponent implements OnInit {
 
   menuItem = 'tests';
   version = '1.0.0';
+  user: string;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private commonservice: CommonService
-  ) { }
+  ) {
+    this.user = commonservice.getUser();
+  }
 
   ngOnInit(): void {
     this.commonservice.get('version', '', null)
     .subscribe(
-      version => this.version = version,
+      version => this.version = version.version,
       err => console.error(err)
     );
   }
@@ -29,6 +32,10 @@ export class HomeComponent implements OnInit {
   menuClick(menu: string) {
     this.menuItem = menu;
     this.router.navigate([menu], {relativeTo: this.route});
+  }
+
+  logout(): void {
+    this.commonservice.logout();
   }
 
 }

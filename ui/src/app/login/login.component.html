@@ -19,6 +19,9 @@
 						<button class="btn btn-primary" (click)="login()">Login</button>
 					</div>
 				</div>
+				<div class="text-center text-danger" *ngIf="error">
+					<small>{{error}}</small>
+				</div>
 			</div>
 			<div class="text-center mt-5 text-secondary font-monospace">
 				<small>v{{version}}</small>

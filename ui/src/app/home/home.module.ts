@@ -4,14 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
-import { EnvironmentsComponent } from './environments/environments.component';
 import { TestsComponent } from './tests/tests.component';
-import { DatasetComponent } from './dataset/dataset.component';
 import { ResultsComponent } from './results/results.component';
+import { UsersComponent } from './users/users.component';
+import { TestbucketComponent } from './testbucket/testbucket.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, EnvironmentsComponent, TestsComponent, DatasetComponent, ResultsComponent],
+  declarations: [HomeComponent, TestsComponent, ResultsComponent, UsersComponent, TestbucketComponent],
   imports: [
     CommonModule,
     FormsModule,

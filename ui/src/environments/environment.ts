@@ -4,11 +4,8 @@ export const environment = {
   url: {
     version: '/api/version',
     user: '/api/user',
-    environment: '/api/environment',
-    dataset: '/api/dataset',
     test: '/api/test',
-    testsuite: '/api/testsuite',
+    testbucket: '/api/testbucket',
     result: '/api/result',
-    resultsummary: '/api/resultsummary',
   }
 };
