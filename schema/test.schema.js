@@ -3,18 +3,34 @@ const Mongoose = require("mongoose")
 
 let definition = {
 	"_id": "String",
-	"testSet": "String",
-	"testSuite": "String",
-	"test": "String",
-	"app": "String",
-	"dataserviceName": "String",
-	"api": "String",
-	"method": "String",
-	"responseCode": "Number",
-	"dataSet": "String",
-	"generatedOn": "Date",
-	"json": "Boolean",
-	"data": "Object"
+	"url": ["String"],
+	"tests": [
+		{
+			"delimiters": {
+				"type": "Array",
+				"default": ["<%", "%>"]
+			},
+			"endpoint": "String",
+			"name": "String",
+			"request": {
+				"method": {
+					"type": "String",
+					"enum": ["POST", "GET", "PUT", "DELETE"]
+				},
+				"url": "String",
+				"headers": "Object",
+				"payload": "Object",
+				"payloadFile": "String",
+				"responseCode": "Number",
+				"saveResponse": "String"
+			},
+			"response": {
+				"headers": "Object",
+				"body": "Object",
+				"bodyFile": "String",
+			}
+		}
+	]
 }
 
 module.exports = Mongoose.Schema(definition)

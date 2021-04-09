@@ -10,82 +10,119 @@ import { CommonService } from '../../utils/common.service';
 })
 export class TestsComponent implements OnInit {
 
-  formTestSuite: FormGroup;
+  createForm = {
+    _id: null,
+    url: [],
+    tests: [
+      {
+        delimiters: ['<%', '%>'],
+        endpoint: null,
+        name: null,
+        request: {
+          method: null,
+          url: null,
+          headers: null,
+          payload: null,
+          payloadFile: null,
+          responseCode: null,
+          saveResponse: null
+        },
+        response: {
+          headers: null,
+          body: null,
+          bodyFile: null,
+        }
+      }
+    ]
+  };
 
-  showCreateModal = false;
+  showEditCreateModal = false;
   deleteConfirmation = false;
-  selectedTab = 'Config';
 
-  operations = ['ALL', 'POST', 'GET', 'PUT', 'DELETE', 'APPROVE'];
-  updatedOperations = ['All', 'POST', 'GET', 'PUT', 'DELETE', 'APPROVE'];
+  operations = ['POST', 'GET', 'PUT', 'DELETE'];
+  delimiters = [
+    ['<%', '%>'],
+    ['{{', '}}'],
+    ['<<', '>>'],
+  ];
 
-  environments: any;
-  selectedEnvironment: any;
-  dataservices: any;
-  selectedDataservice: any;
-  datasets: any;
-  testsuites = [];
-  selectedTestsuite: any;
-  attributes = [];
-  tests = [];
-  testProperties = {
-    count: 0,
-    page: 1,
-    limit: 20
-  };
-
-  attribute: any;
-  dataset: string;
-  mapping = [];
-  users = [];
-  user = {
-    username: '',
-    password: '',
-    operation: ''
-  };
+  tests: [];
+  selectedTestID = null;
 
   errors = {
-    misc: null,
-    remove: null
-  };
-
-  spinners = {
-    misc: false,
-    remove: false
+    createUpdate: null,
+    fetch: null
   };
 
   constructor(
-    private fb: FormBuilder,
     private commonService: CommonService,
   ) {
-    this.formTestSuite = this.fb.group({
-      _id: ['', Validators.required],
-      environment: ['', Validators.required],
-      app: ['', Validators.required],
-      dataservice: ['', Validators.required],
-      dataserviceName: [''],
-      api: ['', Validators.required],
-      testEachAttribute: ['', Validators.required],
-      testParams: [],
-      users: [],
-    });
   }
 
   ngOnInit(): void {
   }
 
-  __resetErrors(): void {
-    this.errors = {
-      misc: null,
-      remove: null
+  __resetForm(): void {
+    this.createForm = {
+      _id: null,
+      url: [],
+      tests: [
+        {
+          delimiters: ['<%', '%>'],
+          endpoint: null,
+          name: null,
+          request: {
+            method: null,
+            url: null,
+            headers: null,
+            payload: null,
+            payloadFile: null,
+            responseCode: null,
+            saveResponse: null
+          },
+          response: {
+            headers: null,
+            body: null,
+            bodyFile: null,
+          }
+        }
+      ]
     };
   }
 
-  __resetSpinners(): void {
-    this.spinners = {
-      misc: false,
-      remove: false
+  __resetErrors(): void {
+    this.errors = {
+      createUpdate: null,
+      fetch: null
     };
+  }
+
+  __getTests(): void {
+    const options = {
+      sort: '_id',
+      select: '_id'
+    };
+    this.commonService.get('test', `/`, options)
+      .subscribe(
+        tests => {
+          this.tests = tests;
+          if (tests.length > 0) {
+            this.selectTest(tests[0]._id);
+          }
+        },
+        () => this.errors.fetch = 'Error fetching tests'
+      );
+  }
+
+  selectTest(testID: string): void {
+    this.selectedTestID = testID;
+    this.commonService.get('test', `/${testID}`, null)
+      .subscribe(
+        test => {
+          this.createForm = JSON.parse(JSON.stringify(test));
+        },
+        () => this.errors.fetch = 'Error fetching details of ' + testID
+      );
   }
 
 }
