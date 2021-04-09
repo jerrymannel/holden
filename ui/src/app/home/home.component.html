@@ -8,6 +8,10 @@
 					(click)="menuClick('tests')"><i class="bi bi-check2-circle fs-5"></i> Tests</a>
 			</li>
 			<li class="nav-item">
+				<a class="menuItem nav-link" aria-current="page" [ngClass]="{'menuSelected': menuItem == 'functions'}"
+					(click)="menuClick('functions')"><i class="bi bi-braces fs-5"></i> Functions</a>
+			</li>
+			<li class="nav-item">
 				<a class="menuItem nav-link" aria-current="page" [ngClass]="{'menuSelected': menuItem == 'testbucket'}"
 					(click)="menuClick('testbucket')"><i class="bi bi-basket fs-5"></i> Test buckets</a>
 			</li>

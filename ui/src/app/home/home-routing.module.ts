@@ -6,6 +6,7 @@ import { TestsComponent } from './tests/tests.component';
 import { ResultsComponent } from './results/results.component';
 import { TestbucketComponent } from './testbucket/testbucket.component';
 import { UsersComponent } from './users/users.component';
+import { FunctionsComponent } from './functions/functions.component';
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
     path: '', component: HomeComponent, children: [
       { path: '', pathMatch: 'full', redirectTo: 'tests' },
       { path: 'tests', component: TestsComponent },
+      { path: 'functions', component: FunctionsComponent },
       { path: 'testbucket', component: TestbucketComponent },
       { path: 'results', component: ResultsComponent },
       { path: 'user', component: UsersComponent }

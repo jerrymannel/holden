@@ -18,6 +18,7 @@ const init = require('./lib/init')
 
 let environmentRouter = require("./routes/environment.routes")
 let testRouter = require("./routes/test.routes")
+let functionRouter = require("./routes/function.routes")
 let testSuiteRouter = require("./routes/testSuite.routes")
 let resultsRouter = require("./routes/result.routes")
 let resultSummaryRouter = require("./routes/resultSummary.routes")
@@ -52,8 +53,9 @@ app.use(async (_req, _res, _next) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/environment", environmentRouter);
-app.use("/api/testsuite", testSuiteRouter);
 app.use("/api/test", testRouter);
+app.use("/api/function", functionRouter);
+app.use("/api/testsuite", testSuiteRouter);
 app.use("/api/result", resultsRouter);
 app.use("/api/resultsummary", resultSummaryRouter);
 

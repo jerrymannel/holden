@@ -5,6 +5,7 @@ export const environment = {
     version: '/api/version',
     user: '/api/user',
     test: '/api/test',
+    function: '/api/function',
     testbucket: '/api/testbucket',
     result: '/api/result',
   }
