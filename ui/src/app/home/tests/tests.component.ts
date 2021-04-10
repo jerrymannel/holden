@@ -114,6 +114,13 @@ export class TestsComponent implements OnInit {
       );
   }
 
+  showForm(): void {
+    this.selectedTestID = null;
+    this.showEditCreateModal = true;
+    this.__resetForm();
+    this.__resetErrors();
+  }
+
   selectTest(testID: string): void {
     this.selectedTestID = testID;
     this.commonService.get('test', `/${testID}`, null)
@@ -122,6 +129,39 @@ export class TestsComponent implements OnInit {
           this.createForm = JSON.parse(JSON.stringify(test));
         },
         () => this.errors.fetch = 'Error fetching details of ' + testID
+      );
+  }
+
+  createTest(): void {
+    this.__resetErrors();
+    this.commonService.post('test', '/', this.createForm)
+      .subscribe(
+        () => {
+          this.__getTests();
+        },
+        () => this.errors.createUpdate = 'Error creating test ' + this.createForm._id
+      );
+  }
+
+  updateTest(): void {
+    this.__resetErrors();
+    this.commonService.put('test', `/${this.createForm._id}`, this.createForm)
+      .subscribe(
+        () => {
+          this.__getTests();
+        },
+        () => this.errors.createUpdate = 'Error updating test ' + this.createForm._id
+      );
+  }
+
+  deleteTest(): void {
+    this.__resetErrors();
+    this.commonService.delete('test', `/${this.createForm._id}`)
+      .subscribe(
+        () => {
+          this.__getTests();
+        },
+        () => this.errors.createUpdate = 'Error deleting test ' + this.createForm._id
       );
   }
 
