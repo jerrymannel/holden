@@ -22,17 +22,14 @@ let definition = {
 					"type": "String",
 					"enum": ["POST", "GET", "PUT", "DELETE"]
 				},
-				"url": "String",
+				"uri": "String",
 				"headers": "Object",
-				"payload": "Object",
-				"payloadFile": "String",
-				"responseCode": "Number",
-				"saveResponse": "String"
+				"body": "Object",
+				"responseCode": "Number"
 			},
 			"response": {
 				"headers": "Object",
 				"body": "Object",
-				"bodyFile": "String",
 			}
 		}
 	]

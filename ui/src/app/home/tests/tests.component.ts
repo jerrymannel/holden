@@ -14,28 +14,25 @@ export class TestsComponent implements OnInit {
     _id: null,
     name: null,
     url: [],
-    tests: [
-      {
-        delimiters: ['<%', '%>'],
-        endpoint: null,
-        name: null,
-        request: {
-          method: null,
-          url: null,
-          headers: null,
-          payload: null,
-          payloadFile: null,
-          responseCode: null,
-          saveResponse: null
-        },
-        response: {
-          headers: null,
-          body: null,
-          bodyFile: null,
-        }
-      }
-    ]
+    tests: []
   };
+  createStep = {
+    delimiters: ['<%', '%>'],
+    endpoint: null,
+    name: null,
+    request: {
+      method: null,
+      uri: null,
+      headers: null,
+      body: null,
+      responseCode: null
+    },
+    response: {
+      headers: null,
+      body: null,
+    }
+  };
+  url: string;
 
   showEditCreateModal = false;
   showDeleteConfirmation = false;
@@ -69,27 +66,23 @@ export class TestsComponent implements OnInit {
       _id: null,
       name: null,
       url: [],
-      tests: [
-        {
-          delimiters: ['<%', '%>'],
-          endpoint: null,
-          name: null,
-          request: {
-            method: null,
-            url: null,
-            headers: null,
-            payload: null,
-            payloadFile: null,
-            responseCode: null,
-            saveResponse: null
-          },
-          response: {
-            headers: null,
-            body: null,
-            bodyFile: null,
-          }
-        }
-      ]
+      tests: []
+    };
+    this.createStep = {
+      delimiters: ['<%', '%>'],
+      endpoint: null,
+      name: null,
+      request: {
+        method: null,
+        uri: null,
+        headers: null,
+        body: null,
+        responseCode: null
+      },
+      response: {
+        headers: null,
+        body: null,
+      }
     };
   }
 
@@ -130,9 +123,21 @@ export class TestsComponent implements OnInit {
       .subscribe(
         test => {
           this.createForm = JSON.parse(JSON.stringify(test));
+          this.selectStep(0);
         },
         () => this.errors.fetch = 'Error fetching details of ' + testID
       );
+  }
+
+  selectStep(index: number): void {
+    this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
+  }
+
+  addUrl(): void {
+    if (this.url && this.createForm.url.indexOf(this.url) === -1) {
+      this.createForm.url.push(this.url);
+    }
+    this.url = null;
   }
 
   createTest(): void {
@@ -166,6 +171,10 @@ export class TestsComponent implements OnInit {
         },
         () => this.errors.createUpdate = 'Error deleting test ' + this.createForm._id
       );
+  }
+
+  stringify(data: any): string {
+    return JSON.stringify(data, null, ' ');
   }
 
 }
