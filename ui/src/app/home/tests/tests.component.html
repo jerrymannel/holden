@@ -5,12 +5,42 @@
 			<h2 class="mb-3">
 				<i class="bi bi-check2-circle fs-4"></i>
 				<span> Tests</span>
+				<button class="btn btn-primary buttondoublewidth float-end" (click)="showForm()"> Add test</button>
 			</h2>
 			<hr>
 		</div>
 	</div>
 
 	<div class="row">
+
+		<div class="col-3">
+			<div class="list-group">
+				<div class="list-group-item fakeLink" *ngFor="let test of tests"
+					[ngClass]="{'selected': selectedTestID == test._id}" (click)="selectTest(test._id)">
+					<span>{{test.name}}</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-9">
+			<div class="card">
+				<!-- HEADER -->
+				<div class="card-header">
+					<span class="fs-5" *ngIf="selectedTestID">{{createForm.name}}</span>
+					<span class="fs-5" *ngIf="!selectedTestID">Add function</span>
+					<button class="btn btn-outline-danger btn-sm float-end"
+						(click)="showDeleteConfirmation = true;">Remove</button>
+				</div>
+				<div class="d-flex bg-warning justify-content-end p-2 gap-2 shadow" *ngIf="showDeleteConfirmation">
+					<span class="fs-5">Are you sure?</span>
+					<button class="btn btn-dark buttonwidth btn-sm" (click)="showDeleteConfirmation = false;">No</button>
+					<button class="btn btn-danger buttonwidth btn-sm" (click)="deleteTest()">Yes</button>
+				</div>
+
+				<!-- BODY -->
+
+			</div>
+		</div>
 
 	</div>
 

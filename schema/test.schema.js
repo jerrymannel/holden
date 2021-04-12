@@ -3,11 +3,16 @@ const Mongoose = require("mongoose")
 
 let definition = {
 	"_id": "String",
+	"name": {
+		"type": "String",
+		"require": true,
+		"unique": true,
+	},
 	"url": ["String"],
 	"tests": [
 		{
 			"delimiters": {
-				"type": "Array",
+				"type": "Object",
 				"default": ["<%", "%>"]
 			},
 			"endpoint": "String",

@@ -6,6 +6,11 @@ const db = require("../lib/db.client")
 
 let schema = require("../schema/test.schema")
 
+schema.pre('save', function (next) {
+	if (!this._id) this._id = Date.now()
+	next()
+})
+
 const testsCrud = new MongooseExpressMiddleware("tests", schema, null)
 
 router.post("", testsCrud.create)

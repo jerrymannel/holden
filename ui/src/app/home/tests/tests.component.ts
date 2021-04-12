@@ -12,6 +12,7 @@ export class TestsComponent implements OnInit {
 
   createForm = {
     _id: null,
+    name: null,
     url: [],
     tests: [
       {
@@ -37,7 +38,7 @@ export class TestsComponent implements OnInit {
   };
 
   showEditCreateModal = false;
-  deleteConfirmation = false;
+  showDeleteConfirmation = false;
 
   operations = ['POST', 'GET', 'PUT', 'DELETE'];
   delimiters = [
@@ -60,11 +61,13 @@ export class TestsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.__getTests();
   }
 
   __resetForm(): void {
     this.createForm = {
       _id: null,
+      name: null,
       url: [],
       tests: [
         {
@@ -99,8 +102,8 @@ export class TestsComponent implements OnInit {
 
   __getTests(): void {
     const options = {
-      sort: '_id',
-      select: '_id'
+      sort: 'name',
+      select: '_id,name'
     };
     this.commonService.get('test', `/`, options)
       .subscribe(
