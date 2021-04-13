@@ -28,13 +28,20 @@
 				<div class="card-header">
 					<span class="fs-5" *ngIf="selectedTestID">{{createForm.name}}</span>
 					<span class="fs-5" *ngIf="!selectedTestID">Add function</span>
+					<button class="btn btn-success btn-sm float-end buttonwidth" *ngIf="showEditCreateModal"
+						(click)="saveTest()">Save</button>
 					<button class="btn btn-warning btn-sm buttonwidth float-end mx-2"
 						(click)="showEditCreateModal = !showEditCreateModal"
-						[ngClass]="{'btn-warning':!showEditCreateModal, 'btn-dark':showEditCreateModal}">
-						<span *ngIf="!showEditCreateModal">Edit</span>
+						[ngClass]="{'btn-warning':!showEditCreateModal, 'btn-dark':showEditCreateModal}"
+						*ngIf="!showEditCreateModal"> Edit
 						<span *ngIf="showEditCreateModal">Cancel</span>
 					</button>
-					<button class="btn btn-outline-danger btn-sm float-end"
+					<button class="btn btn-warning btn-sm buttonwidth float-end mx-2" (click)="selectTest(selectedTestID)"
+						[ngClass]="{'btn-warning':!showEditCreateModal, 'btn-dark':showEditCreateModal}"
+						*ngIf="showEditCreateModal">
+						Cancel
+					</button>
+					<button class="btn btn-outline-danger btn-sm float-end buttonwidth" *ngIf="!showEditCreateModal"
 						(click)="showDeleteConfirmation = true;">Remove</button>
 				</div>
 				<div class="d-flex bg-warning justify-content-end p-2 gap-2 shadow" *ngIf="showDeleteConfirmation">
@@ -54,7 +61,7 @@
 								<div class="col">
 									<input type="text" class="form-control form-control-sm" [(ngModel)]="createForm.name"
 										*ngIf="showEditCreateModal">
-									<span class="ms-4" *ngIf="!showEditCreateModal"><strong>{{createForm.name}}</strong></span>
+									<span class="ms-1" *ngIf="!showEditCreateModal"><strong>{{createForm.name}}</strong></span>
 								</div>
 							</div>
 							<div class="row">
@@ -67,9 +74,10 @@
 										<button class="btn btn-secondary" (click)="addUrl()">Add</button>
 									</div>
 									<ul class="list-group list-group-numbered">
-										<li class="list-group-item p-1" *ngFor="let url of createForm.url">
+										<li class="list-group-item p-1" *ngFor="let url of createForm.url; let i = index">
 											{{url}}
-											<button class="btn btn-outline-danger btn-sm float-end" *ngIf="showEditCreateModal">X</button>
+											<span class="badge bg-danger fakeLink float-end" *ngIf="showEditCreateModal"
+												(click)="removeURL(i)">X</span>
 										</li>
 									</ul>
 								</div>
@@ -85,11 +93,11 @@
 					<div class=" d-flex flex-row gap-1">
 
 						<div class="d-flex flex-column" style="width: 13rem;">
-							<button class="btn btn-dark btn-sm mb-1">Add Test</button>
+							<button class="btn btn-dark btn-sm mb-1" *ngIf="showEditCreateModal" (click)="addStep()">Add Test</button>
 
 							<ul class="list-group list-group-numbered">
 								<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
-									(click)="selectStep(i)" [ngClass]="{'selected': createStep.name === step.name}">
+									(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
 									{{step.name}}
 								</li>
 							</ul>
@@ -97,52 +105,80 @@
 
 						<div class="d-flex flex-column border flex-fill p-2 gap-1">
 							<div class="d-flex flex-row">
-								<em style="width: 10rem;">Name</em>
-								<span>{{createStep.name}}</span>
+								<span style="width: 10rem;">Name</span>
+								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
+								<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+									[(ngModel)]="createForm.tests[selectedStepIndex].name" style="width: 20rem;">
 							</div>
 							<div class="d-flex flex-row">
-								<em style="width: 10rem;">Delimiters</em>
-								<span>{{createStep.delimiters.join(" ")}}</span>
+								<span style="width: 10rem;">Delimiters</span>
+								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.delimiters.join(" ")}}</span>
+								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
+									(change)="delimiterUpdated($event)" style="width: 20rem;">
+									<option *ngFor="let delim of delimiters" [value]="delim">{{delim.join(",")}}</option>
+								</select>
 							</div>
 							<div class="d-flex flex-row">
-								<em style="width: 10rem;">Endpoint</em>
-								<span>{{createForm.url[createStep.endpoint - 1]}}</span>
+								<span style="width: 10rem;">Endpoint</span>
+								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.endpoint}}</span>
+								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
+									(change)="endpointUpdated($event)" style="width: 20rem;">
+									<option *ngFor="let url of createForm.url" [value]="url">{{url}}</option>
+								</select>
 							</div>
 							<div class="d-flex flex-column">
-								<em style="width: 10rem;">Request</em>
+								<span style="width: 10rem;">Request</span>
 								<div class="d-flex flex-column border p-2">
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Method</em>
-										<span>{{createStep.request.method}}</span>
+										<span style="width: 10rem;">Method</span>
+										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+										<div *ngIf="showEditCreateModal">
+											<button class="me-2 btn btn-sm btn-outline-dark" [ngClass]="{
+													'btn-dark': createForm.tests[selectedStepIndex].request.method == 'POST',
+													'btn-outline-dark': createForm.tests[selectedStepIndex].request.method != 'POST'
+												}" (click)="createForm.tests[selectedStepIndex].request.method = 'POST'">POST</button>
+											<button class="me-2 btn btn-sm btn-outline-success" [ngClass]="{
+													'btn-success': createForm.tests[selectedStepIndex].request.method == 'GET',
+													'btn-outline-success': createForm.tests[selectedStepIndex].request.method != 'GET'
+												}" (click)="createForm.tests[selectedStepIndex].request.method = 'GET'">GET</button>
+											<button class="me-2 btn btn-sm btn-outline-warning" [ngClass]="{
+													'btn-warning': createForm.tests[selectedStepIndex].request.method == 'PUT',
+													'btn-outline-warning': createForm.tests[selectedStepIndex].request.method != 'PUT'
+												}" (click)="createForm.tests[selectedStepIndex].request.method = 'PUT'">PUT</button>
+											<button class="me-2 btn btn-sm btn-outline-danger" [ngClass]="{
+													'btn-danger': createForm.tests[selectedStepIndex].request.method == 'DELETE',
+													'btn-outline-danger': createForm.tests[selectedStepIndex].request.method != 'DELETE'
+												}" (click)="createForm.tests[selectedStepIndex].request.method = 'DELETE'">DELETE</button>
+										</div>
 									</div>
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">URI</em>
-										<span>{{createStep.request.uri}}</span>
+										<span style="width: 10rem;">URI</span>
+										<span>{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
 									</div>
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Expected Status</em>
-										<span>{{createStep.request.responseCode}}</span>
+										<span style="width: 10rem;">Expected Status</span>
+										<span>{{createForm.tests[selectedStepIndex]?.request.responseCode}}</span>
 									</div>
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Headers</em>
-										<span>{{stringify(createStep.request.headers) || "Nil"}}</span>
+										<span style="width: 10rem;">Headers</span>
+										<span>{{stringify(createForm.tests[selectedStepIndex]?.request.headers) || "Nil"}}</span>
 									</div>
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Body</em>
-										<span>{{stringify(createStep.request.body) || "Nil"}}</span>
+										<span style="width: 10rem;">Body</span>
+										<span>{{stringify(createForm.tests[selectedStepIndex]?.request.body) || "Nil"}}</span>
 									</div>
 								</div>
 							</div>
 							<div class="d-flex flex-column">
-								<em style="width: 10rem;">Response</em>
+								<span style="width: 10rem;">Response</span>
 								<div class="d-flex flex-column border p-2">
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Headers</em>
-										<span>{{stringify(createStep.response.headers) || "Nil"}}</span>
+										<span style="width: 10rem;">Headers</span>
+										<span>{{stringify(createForm.tests[selectedStepIndex]?.response?.headers) || "Nil"}}</span>
 									</div>
 									<div class="d-flex flex-row">
-										<em style="width: 10rem;">Body</em>
-										<span>{{stringify(createStep.response.body) || "Nil"}}</span>
+										<span style="width: 10rem;">Body</span>
+										<span>{{stringify(createForm.tests[selectedStepIndex]?.response?.body) || "Nil"}}</span>
 									</div>
 								</div>
 							</div>

@@ -46,6 +46,7 @@ export class TestsComponent implements OnInit {
 
   tests: [];
   selectedTestID = null;
+  selectedStepIndex = 0;
 
   errors = {
     createUpdate: null,
@@ -119,11 +120,14 @@ export class TestsComponent implements OnInit {
 
   selectTest(testID: string): void {
     this.selectedTestID = testID;
+    this.showEditCreateModal = false;
     this.commonService.get('test', `/${testID}`, null)
       .subscribe(
         test => {
           this.createForm = JSON.parse(JSON.stringify(test));
-          this.selectStep(0);
+          if (this.createForm.tests.length > 0) {
+            this.selectStep(0);
+          }
         },
         () => this.errors.fetch = 'Error fetching details of ' + testID
       );
@@ -131,6 +135,7 @@ export class TestsComponent implements OnInit {
 
   selectStep(index: number): void {
     this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
+    this.selectedStepIndex = index;
   }
 
   addUrl(): void {
@@ -138,6 +143,46 @@ export class TestsComponent implements OnInit {
       this.createForm.url.push(this.url);
     }
     this.url = null;
+  }
+
+  removeURL(index: number): void {
+    this.createForm.url.splice(index, 1);
+  }
+
+  addStep(): void {
+    this.createForm.tests.push({
+      delimiters: ['<%', '%>'],
+      endpoint: null,
+      name: null,
+      request: {
+        method: null,
+        uri: null,
+        headers: null,
+        body: null,
+        responseCode: null
+      },
+      response: {
+        headers: null,
+        body: null,
+      }
+    });
+    this.selectStep(this.createForm.tests.length - 1);
+  }
+
+  removeStep(index: number): void {
+    this.createForm.tests.splice(index, 1);
+    this.createStep = null;
+    if (this.createForm.tests.length > 0) {
+      this.selectStep(0);
+    }
+  }
+
+  delimiterUpdated(event: any): void {
+    this.createForm.tests[this.selectedStepIndex].delimiters = event.target.value.split(',');
+  }
+
+  endpointUpdated(event: any): void {
+    this.createForm.tests[this.selectedStepIndex].endpoint = event.target.value;
   }
 
   createTest(): void {
@@ -175,6 +220,10 @@ export class TestsComponent implements OnInit {
 
   stringify(data: any): string {
     return JSON.stringify(data, null, ' ');
+  }
+
+  saveTest(): void {
+    console.log(this.createForm);
   }
 
 }
