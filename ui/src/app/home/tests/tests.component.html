@@ -114,8 +114,9 @@
 								<span style="width: 10rem;">Delimiters</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.delimiters.join(" ")}}</span>
 								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
-									(change)="delimiterUpdated($event)" style="width: 20rem;">
-									<option *ngFor="let delim of delimiters" [value]="delim">{{delim.join(",")}}</option>
+									(change)="delimiterUpdated($event)" style="width: 20rem;"
+									[(ngModel)]="createForm.tests[selectedStepIndex].delimiters">
+									<option *ngFor="let delim of delimiters" [ngValue]="delim">{{delim.join(",")}}</option>
 								</select>
 							</div>
 							<div class="d-flex flex-row">
