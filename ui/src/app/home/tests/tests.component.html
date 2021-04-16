@@ -113,8 +113,7 @@
 							<div class="d-flex flex-row">
 								<span style="width: 10rem;">Delimiters</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.delimiters.join(" ")}}</span>
-								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
-									(change)="delimiterUpdated($event)" style="width: 20rem;"
+								<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
 									[(ngModel)]="createForm.tests[selectedStepIndex].delimiters">
 									<option *ngFor="let delim of delimiters" [ngValue]="delim">{{delim.join(",")}}</option>
 								</select>
@@ -127,30 +126,19 @@
 									<option *ngFor="let url of createForm.url" [value]="url">{{url}}</option>
 								</select>
 							</div>
-							<div class="d-flex flex-column">
+							<div class="d-flex flex-column mt-2">
 								<span style="width: 10rem;">Request</span>
-								<div class="d-flex flex-column border p-2">
+								<div class="d-flex flex-column border-top">
 									<div class="d-flex flex-row">
 										<span style="width: 10rem;">Method</span>
 										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
-										<div *ngIf="showEditCreateModal">
-											<button class="me-2 btn btn-sm btn-outline-dark" [ngClass]="{
-													'btn-dark': createForm.tests[selectedStepIndex].request.method == 'POST',
-													'btn-outline-dark': createForm.tests[selectedStepIndex].request.method != 'POST'
-												}" (click)="createForm.tests[selectedStepIndex].request.method = 'POST'">POST</button>
-											<button class="me-2 btn btn-sm btn-outline-success" [ngClass]="{
-													'btn-success': createForm.tests[selectedStepIndex].request.method == 'GET',
-													'btn-outline-success': createForm.tests[selectedStepIndex].request.method != 'GET'
-												}" (click)="createForm.tests[selectedStepIndex].request.method = 'GET'">GET</button>
-											<button class="me-2 btn btn-sm btn-outline-warning" [ngClass]="{
-													'btn-warning': createForm.tests[selectedStepIndex].request.method == 'PUT',
-													'btn-outline-warning': createForm.tests[selectedStepIndex].request.method != 'PUT'
-												}" (click)="createForm.tests[selectedStepIndex].request.method = 'PUT'">PUT</button>
-											<button class="me-2 btn btn-sm btn-outline-danger" [ngClass]="{
-													'btn-danger': createForm.tests[selectedStepIndex].request.method == 'DELETE',
-													'btn-outline-danger': createForm.tests[selectedStepIndex].request.method != 'DELETE'
-												}" (click)="createForm.tests[selectedStepIndex].request.method = 'DELETE'">DELETE</button>
-										</div>
+										<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
+											<option [ngValue]="'POST'">POST</option>
+											<option [ngValue]="'GET'">GET</option>
+											<option [ngValue]="'PUT'">PUT</option>
+											<option [ngValue]="'DELETE'">DELETE</option>
+										</select>
 									</div>
 									<div class="d-flex flex-row">
 										<span style="width: 10rem;">URI</span>
