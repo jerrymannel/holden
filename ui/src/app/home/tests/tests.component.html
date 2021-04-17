@@ -140,21 +140,34 @@
 											<option [ngValue]="'DELETE'">DELETE</option>
 										</select>
 									</div>
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">URI</span>
-										<span>{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
+										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
+										<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.uri" style="width: 20rem;">
 									</div>
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Expected Status</span>
-										<span>{{createForm.tests[selectedStepIndex]?.request.responseCode}}</span>
+										<span
+											*ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.responseCode}}</span>
+										<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.responseCode" style="width: 20rem;">
 									</div>
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Headers</span>
-										<span>{{stringify(createForm.tests[selectedStepIndex]?.request.headers) || "Nil"}}</span>
+										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.request.headers)
+											|| "Nil"}}</span>
+										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="4"
+											style="width: 20rem;"></textarea>
 									</div>
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Body</span>
-										<span>{{stringify(createForm.tests[selectedStepIndex]?.request.body) || "Nil"}}</span>
+										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.request.body) ||
+											"Nil"}}</span>
+										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="4"
+											style="width: 20rem;"></textarea>
 									</div>
 								</div>
 							</div>
