@@ -126,10 +126,10 @@
 									<option *ngFor="let url of createForm.url" [value]="url">{{url}}</option>
 								</select>
 							</div>
-							<div class="d-flex flex-column mt-2">
-								<span style="width: 10rem;">Request</span>
+							<div class="d-flex flex-column mt-3">
+								<span style="width: 10rem;"><strong>Request</strong></span>
 								<div class="d-flex flex-column border-top">
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Method</span>
 										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
 										<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
@@ -171,16 +171,25 @@
 									</div>
 								</div>
 							</div>
-							<div class="d-flex flex-column">
-								<span style="width: 10rem;">Response</span>
-								<div class="d-flex flex-column border p-2">
-									<div class="d-flex flex-row">
+							<div class="d-flex flex-column mt-3">
+								<span style="width: 10rem;"><strong>Response</strong></span>
+								<div class="d-flex flex-column border-top p-2">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Headers</span>
-										<span>{{stringify(createForm.tests[selectedStepIndex]?.response?.headers) || "Nil"}}</span>
+										<span
+											*ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.response?.headers)
+											|| "Nil"}}</span>
+										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="4"
+											style="width: 20rem;"></textarea>
 									</div>
-									<div class="d-flex flex-row">
+									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Body</span>
-										<span>{{stringify(createForm.tests[selectedStepIndex]?.response?.body) || "Nil"}}</span>
+										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.response?.body)
+											|| "Nil"}}</span>
+										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+											[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="4"
+											style="width: 20rem;"></textarea>
 									</div>
 								</div>
 							</div>
