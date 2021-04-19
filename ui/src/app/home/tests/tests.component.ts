@@ -116,6 +116,7 @@ export class TestsComponent implements OnInit {
     this.showEditCreateModal = true;
     this.__resetForm();
     this.__resetErrors();
+    this.addStep();
   }
 
   selectTest(testID: string): void {
@@ -212,6 +213,7 @@ export class TestsComponent implements OnInit {
     this.commonService.delete('test', `/${this.createForm._id}`)
       .subscribe(
         () => {
+          this.showDeleteConfirmation = false;
           this.__getTests();
         },
         () => this.errors.createUpdate = 'Error deleting test ' + this.createForm._id
@@ -224,6 +226,17 @@ export class TestsComponent implements OnInit {
 
   saveTest(): void {
     console.log(this.createForm);
+    if (this.selectedTestID) {
+      this.commonService.put('test', `/${this.selectedTestID}`, this.createForm)
+        .subscribe(
+          () => this.selectTest(this.selectedTestID)
+        );
+    } else {
+      this.commonService.post('test', '/', this.createForm)
+        .subscribe(
+          data => this.selectTest(data._id)
+        );
+    }
   }
 
 }
