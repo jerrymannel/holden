@@ -71,11 +71,14 @@
 								<div class="col">
 									<div class="input-group input-group-sm mb-1" *ngIf="showEditCreateModal">
 										<input type="text" class="form-control" [(ngModel)]="url">
-										<button class="btn btn-secondary" (click)="addUrl()">Add</button>
+										<button class="btn btn-secondary" (click)="addUrl()">
+											<span *ngIf="urlIndex == null">Add</span>
+											<span *ngIf="urlIndex != null">Update</span>
+										</button>
 									</div>
 									<ul class="list-group list-group-numbered">
 										<li class="list-group-item p-1" *ngFor="let url of createForm.url; let i = index">
-											{{url}}
+											<span (click)="editURL(url, i)">{{url}}</span>
 											<span class="badge bg-danger fakeLink float-end" *ngIf="showEditCreateModal"
 												(click)="removeURL(i)">X</span>
 										</li>
@@ -92,10 +95,10 @@
 
 					<div class=" d-flex flex-row gap-1">
 
-						<div class="d-flex flex-column" style="width: 13rem;">
+						<div class="d-flex flex-column">
 							<button class="btn btn-dark btn-sm mb-1" *ngIf="showEditCreateModal" (click)="addStep()">Add Test</button>
 
-							<ul class="list-group list-group-numbered">
+							<ul class="list-group list-group-numbered" style="width: 13rem;">
 								<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
 									(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
 									{{step.name}}
@@ -103,7 +106,7 @@
 							</ul>
 						</div>
 
-						<div class="d-flex flex-column border flex-fill p-2 gap-1">
+						<div class="d-flex flex-column flex-fill border p-2 gap-1">
 							<div class="d-flex flex-row">
 								<span style="width: 10rem;">Name</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
@@ -122,7 +125,7 @@
 								<span style="width: 10rem;">Endpoint</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.endpoint}}</span>
 								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
-									(change)="endpointUpdated($event)" style="width: 20rem;">
+									[(ngModel)]="createForm.tests[selectedStepIndex].endpoint" style="width: 20rem;">
 									<option *ngFor="let url of createForm.url" [value]="url">{{url}}</option>
 								</select>
 							</div>
@@ -155,41 +158,44 @@
 									</div>
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Headers</span>
-										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.request.headers)
+										<span *ngIf="!showEditCreateModal"
+											style="width: 35rem;font-size: 0.8rem;">{{createForm.tests[selectedStepIndex]?.request.headers
 											|| "Nil"}}</span>
 										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="4"
-											style="width: 20rem;"></textarea>
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="8"
+											style="width: 35rem;"></textarea>
 									</div>
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Body</span>
-										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.request.body) ||
+										<span *ngIf="!showEditCreateModal"
+											style="width: 35rem;font-size: 0.8rem;">{{createForm.tests[selectedStepIndex]?.request.body ||
 											"Nil"}}</span>
 										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="4"
-											style="width: 20rem;"></textarea>
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="8"
+											style="width: 35rem;"></textarea>
 									</div>
 								</div>
 							</div>
 							<div class="d-flex flex-column mt-3">
 								<span style="width: 10rem;"><strong>Response</strong></span>
-								<div class="d-flex flex-column border-top p-2">
+								<div class="d-flex flex-column border-top">
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Headers</span>
-										<span
-											*ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.response?.headers)
+										<span *ngIf="!showEditCreateModal"
+											style="width: 35rem;font-size: 0.8rem;">{{createForm.tests[selectedStepIndex]?.response?.headers
 											|| "Nil"}}</span>
 										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="4"
-											style="width: 20rem;"></textarea>
+											[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="8"
+											style="width: 35rem;"></textarea>
 									</div>
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Body</span>
-										<span *ngIf="!showEditCreateModal">{{stringify(createForm.tests[selectedStepIndex]?.response?.body)
+										<span *ngIf="!showEditCreateModal"
+											style="width: 35rem;font-size: 0.8rem;">{{createForm.tests[selectedStepIndex]?.response?.body
 											|| "Nil"}}</span>
 										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="4"
-											style="width: 20rem;"></textarea>
+											[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="8"
+											style="width: 35rem;"></textarea>
 									</div>
 								</div>
 							</div>

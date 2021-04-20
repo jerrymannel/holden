@@ -33,6 +33,7 @@ export class TestsComponent implements OnInit {
     }
   };
   url: string;
+  urlIndex = null;
 
   showEditCreateModal = false;
   showDeleteConfirmation = false;
@@ -140,10 +141,20 @@ export class TestsComponent implements OnInit {
   }
 
   addUrl(): void {
-    if (this.url && this.createForm.url.indexOf(this.url) === -1) {
+    console.log(this.url, this.urlIndex);
+    if (this.urlIndex != null) {
+      this.removeURL(this.urlIndex);
+      this.createForm.url.push(this.url);
+    } else if (this.url && this.createForm.url.indexOf(this.url) === -1) {
       this.createForm.url.push(this.url);
     }
     this.url = null;
+    this.urlIndex = null;
+  }
+
+  editURL(url: string, index: number): void {
+    this.url = url;
+    this.urlIndex = index;
   }
 
   removeURL(index: number): void {
