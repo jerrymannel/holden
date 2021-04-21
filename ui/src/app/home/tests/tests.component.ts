@@ -186,11 +186,13 @@ export class TestsComponent implements OnInit {
     this.createStep = null;
     if (this.createForm.tests.length > 0) {
       this.selectStep(0);
+    } else {
+      this.createForm.tests = [];
     }
   }
 
-  delimiterUpdated(event: any): void {
-    this.createForm.tests[this.selectedStepIndex].delimiters = event.target.value.split(',');
+  compareDelimiters(arg1, arg2: any): boolean {
+    return arg1.join(',') === arg2.join(',');
   }
 
   endpointUpdated(event: any): void {
