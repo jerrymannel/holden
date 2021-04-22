@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CommonService } from '../../utils/common.service';
+import { httpStatusCodes } from 'src/assets/statusCodes';
 
 @Component({
   selector: 'app-tests',
@@ -19,13 +20,13 @@ export class TestsComponent implements OnInit {
   createStep = {
     delimiters: ['<%', '%>'],
     endpoint: null,
-    name: null,
+    name: `Step-${this.createForm.tests.length + 1}`,
     request: {
-      method: null,
+      method: 'GET',
       uri: null,
       headers: null,
       body: null,
-      responseCode: null
+      responseCode: 200
     },
     response: {
       headers: null,
@@ -54,10 +55,11 @@ export class TestsComponent implements OnInit {
     fetch: null
   };
 
+  httpStatusCodes = httpStatusCodes;
+
   constructor(
     private commonService: CommonService,
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.__getTests();
@@ -73,13 +75,13 @@ export class TestsComponent implements OnInit {
     this.createStep = {
       delimiters: ['<%', '%>'],
       endpoint: null,
-      name: null,
+      name: `Step-${this.createForm.tests.length + 1}`,
       request: {
-        method: null,
+        method: 'GET',
         uri: null,
         headers: null,
         body: null,
-        responseCode: null
+        responseCode: 200
       },
       response: {
         headers: null,
@@ -115,6 +117,7 @@ export class TestsComponent implements OnInit {
   showForm(): void {
     this.selectedTestID = null;
     this.showEditCreateModal = true;
+    this.urlIndex = null;
     this.__resetForm();
     this.__resetErrors();
     this.addStep();
@@ -165,13 +168,13 @@ export class TestsComponent implements OnInit {
     this.createForm.tests.push({
       delimiters: ['<%', '%>'],
       endpoint: null,
-      name: null,
+      name: `Step-${this.createForm.tests.length + 1}`,
       request: {
-        method: null,
+        method: 'GET',
         uri: null,
         headers: null,
         body: null,
-        responseCode: null
+        responseCode: 200
       },
       response: {
         headers: null,
@@ -192,7 +195,7 @@ export class TestsComponent implements OnInit {
   }
 
   compareDelimiters(arg1, arg2: any): boolean {
-    return arg1.join(',') === arg2.join(',');
+    return arg1?.join(',') === arg2?.join(',');
   }
 
   endpointUpdated(event: any): void {
@@ -235,6 +238,21 @@ export class TestsComponent implements OnInit {
 
   stringify(data: any): string {
     return JSON.stringify(data, null, ' ');
+  }
+
+  getVerboseStatusCode(code: number): string {
+    let statusCode = httpStatusCodes.find(statusCode => statusCode[0] === code);
+    if (statusCode && statusCode.length > 0) {
+      statusCode = statusCode[1];
+    }
+    return statusCode;
+  }
+
+  getStatusCodeClass(code: number): string {
+    if (code < 300) return 'text-success';
+    if (code < 400) return 'text-primary';
+    if (code < 500) return 'text-warning';
+    if (code < 600) return 'text-danger';
   }
 
   saveTest(): void {

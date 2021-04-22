@@ -89,19 +89,19 @@
 					</div>
 
 					<div class="bg-light border my-2 px-3">
-						<span class="fs-5">Tests</span>
-						<span class="fs-6 float-end mt-1">No. of tests: <strong>{{createForm.tests.length}}</strong></span>
+						<span class="fs-5">Steps</span>
+						<span class="fs-6 float-end mt-1">No. of steps: <strong>{{createForm.tests.length}}</strong></span>
 					</div>
 
 					<div class=" d-flex flex-row gap-1">
 
 						<div class="d-flex flex-column">
-							<button class="btn btn-dark btn-sm mb-1" *ngIf="showEditCreateModal" (click)="addStep()">Add Test</button>
+							<button class="btn btn-dark btn-sm mb-1" *ngIf="showEditCreateModal" (click)="addStep()">Add step</button>
 
-							<ul class="list-group list-group-numbered" style="width: 13rem;">
+							<ul class="list-group" style="width: 13rem;">
 								<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
 									(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
-									<span>{{step.name}}</span>
+									<span class='smallFont'>{{step.name}}</span>
 									<span class="fakeLink float-end" *ngIf="showEditCreateModal" (click)="removeStep(i)"><i
 											class="bi bi-dash-circle"></i></span>
 								</li>
@@ -136,7 +136,16 @@
 								<div class="d-flex flex-column border-top">
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Method</span>
-										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+										<span *ngIf="!showEditCreateModal">
+											<span class="badge bg-dark"
+												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'POST'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+											<span class="badge bg-success"
+												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'GET'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+											<span class="badge bg-primary"
+												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'PUT'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+											<span class="badge bg-danger"
+												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'DELETE'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+										</span>
 										<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
 											[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
 											<option [ngValue]="'POST'">POST</option>
@@ -153,10 +162,13 @@
 									</div>
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Expected Status</span>
-										<span
-											*ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.responseCode}}</span>
-										<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.responseCode" style="width: 20rem;">
+										<span [ngClass]="getStatusCodeClass(createForm.tests[selectedStepIndex]?.request.responseCode)"
+											*ngIf="!showEditCreateModal">{{getVerboseStatusCode(createForm.tests[selectedStepIndex]?.request.responseCode)}}</span>
+										<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 20rem;"
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.responseCode">
+											<option [ngValue]="statusCode[0]" *ngFor="let statusCode of httpStatusCodes">{{statusCode[1]}}
+											</option>
+										</select>
 									</div>
 									<div class="d-flex flex-row my-2">
 										<span style="width: 10rem;">Headers</span>
