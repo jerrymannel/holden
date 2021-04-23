@@ -309,6 +309,7 @@ export class TestsComponent implements OnInit {
       if (!_test.name) { flag = true; this.stepErrors[_index] = "Missing name"; return; }
       if (!_test.endpoint) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
       if (!_test.request.uri) { flag = true; this.stepErrors[_index] = "Request URI missing"; return; }
+      if (this.createForm.url.indexOf(_test.endpoint) == -1) _test.endpoint = null;
     })
     return flag;
   }

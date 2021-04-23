@@ -60,7 +60,7 @@
 								</div>
 								<div class="col">
 									<input type="text" class="form-control form-control-sm" [(ngModel)]="createForm.name"
-										*ngIf="showEditCreateModal">
+										*ngIf="showEditCreateModal" [ngClass]="{'is-invalid': !createForm.name}">
 									<span class="ms-1" *ngIf="!showEditCreateModal"><strong>{{createForm.name}}</strong></span>
 								</div>
 							</div>
@@ -70,7 +70,8 @@
 								</div>
 								<div class="col">
 									<div class="input-group input-group-sm mb-1" *ngIf="showEditCreateModal">
-										<input type="text" class="form-control" [(ngModel)]="url">
+										<input type="text" class="form-control" [(ngModel)]="url"
+											[ngClass]="{'is-invalid': createForm.url.length == 0}">
 										<button class="btn btn-secondary" (click)="addUrl()">
 											<span *ngIf="urlIndex == null">Add</span>
 											<span *ngIf="urlIndex != null">Update</span>
@@ -120,7 +121,7 @@
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
 								<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
 									[(ngModel)]="createForm.tests[selectedStepIndex].name"
-									[ngClass]="{'border-danger': stepErrors[selectedStepIndex].name != null}" style="width: 20rem;">
+									[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}" style="width: 20rem;">
 							</div>
 							<div class="d-flex flex-row">
 								<span style="width: 10rem;">Delimiters</span>
@@ -134,7 +135,8 @@
 								<span style="width: 10rem;">Endpoint</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.endpoint}}</span>
 								<select *ngIf="showEditCreateModal" class="form-select form-select-sm"
-									[(ngModel)]="createForm.tests[selectedStepIndex].endpoint" style="width: 20rem;">
+									[(ngModel)]="createForm.tests[selectedStepIndex].endpoint" style="width: 20rem;"
+									[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].endpoint}">
 									<option *ngFor="let url of createForm.url" [value]="url">{{url}}</option>
 								</select>
 							</div>
@@ -165,7 +167,9 @@
 										<span style="width: 10rem;">URI</span>
 										<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
 										<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.uri" style="width: 20rem;">
+											[(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
+											[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}"
+											style="width: 20rem;">
 									</div>
 									<div class="d-flex flex-row mt-2">
 										<span style="width: 10rem;">Expected Status</span>
