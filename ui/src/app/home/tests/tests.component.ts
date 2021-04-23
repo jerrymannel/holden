@@ -52,8 +52,10 @@ export class TestsComponent implements OnInit {
 
   errors = {
     createUpdate: null,
-    fetch: null
+    fetch: null,
+    validation: null
   };
+  stepErrors = {};
 
   httpStatusCodes = httpStatusCodes;
 
@@ -93,8 +95,10 @@ export class TestsComponent implements OnInit {
   __resetErrors(): void {
     this.errors = {
       createUpdate: null,
-      fetch: null
+      fetch: null,
+      validation: null
     };
+    this.stepErrors = {};
   }
 
   __getTests(): void {
@@ -265,9 +269,48 @@ export class TestsComponent implements OnInit {
     } else {
       this.commonService.post('test', '/', this.createForm)
         .subscribe(
-          data => this.selectTest(data._id)
+          data => {
+            this.selectTest(data._id);
+            this.__getTests();
+          }
         );
     }
+  }
+
+  validateForm(): boolean {
+    this.__resetErrors();
+    if (!this.createForm.name) { this.errors.validation = 'Name missing'; return true; }
+    if (this.createForm.url.length < 1) { this.errors.validation = 'At least one URL is required'; return true; }
+    if (this.validateSteps()) { this.errors.validation = 'Error in step.'; return true; }
+    return false;
+  }
+
+  // {
+  //   delimiters: ['<%', '%>'],
+  //   endpoint: null,
+  //   name: `Step-${this.createForm.tests.length + 1}`,
+  //   request: {
+  //     method: 'GET',
+  //     uri: null,
+  //     headers: null,
+  //     body: null,
+  //     responseCode: 200
+  //   },
+  //   response: {
+  //     headers: null,
+  //     body: null,
+  //   }
+  // };
+
+  validateSteps(): boolean {
+    let flag = false;
+    this.stepErrors = [];
+    this.createForm.tests.forEach((_test, _index) => {
+      if (!_test.name) { flag = true; this.stepErrors[_index] = "Missing name"; return; }
+      if (!_test.endpoint) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
+      if (!_test.request.uri) { flag = true; this.stepErrors[_index] = "Request URI missing"; return; }
+    })
+    return flag;
   }
 
 }

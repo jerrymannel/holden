@@ -28,8 +28,8 @@
 				<div class="card-header">
 					<span class="fs-5" *ngIf="selectedTestID">{{createForm.name}}</span>
 					<span class="fs-5" *ngIf="!selectedTestID">Add function</span>
-					<button class="btn btn-success btn-sm float-end buttonwidth" *ngIf="showEditCreateModal"
-						(click)="saveTest()">Save</button>
+					<button class="btn btn-success btn-sm float-end buttonwidth" *ngIf="showEditCreateModal" (click)="saveTest()"
+						[disabled]="validateForm()">Save</button>
 					<button class="btn btn-warning btn-sm buttonwidth float-end mx-2"
 						(click)="showEditCreateModal = !showEditCreateModal"
 						[ngClass]="{'btn-warning':!showEditCreateModal, 'btn-dark':showEditCreateModal}"
@@ -86,11 +86,16 @@
 								</div>
 							</div>
 						</div>
+						<div class="col p-3 text-end">
+							<span *ngIf="errors.validation" class="text-danger">{{errors.validation}}</span>
+						</div>
 					</div>
 
 					<div class="bg-light border my-2 px-3">
 						<span class="fs-5">Steps</span>
 						<span class="fs-6 float-end mt-1">No. of steps: <strong>{{createForm.tests.length}}</strong></span>
+						<span class="text-danger float-end p-2 mx-2 smallFont"
+							*ngIf="stepErrors[selectedStepIndex]">{{stepErrors[selectedStepIndex]}}</span>
 					</div>
 
 					<div class=" d-flex flex-row gap-1">
@@ -104,6 +109,7 @@
 									<span class='smallFont'>{{step.name}}</span>
 									<span class="fakeLink float-end" *ngIf="showEditCreateModal" (click)="removeStep(i)"><i
 											class="bi bi-dash-circle"></i></span>
+									<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
 								</li>
 							</ul>
 						</div>
@@ -113,7 +119,8 @@
 								<span style="width: 10rem;">Name</span>
 								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
 								<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-									[(ngModel)]="createForm.tests[selectedStepIndex].name" style="width: 20rem;">
+									[(ngModel)]="createForm.tests[selectedStepIndex].name"
+									[ngClass]="{'border-danger': stepErrors[selectedStepIndex].name != null}" style="width: 20rem;">
 							</div>
 							<div class="d-flex flex-row">
 								<span style="width: 10rem;">Delimiters</span>
