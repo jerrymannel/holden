@@ -9,10 +9,11 @@ import { ResultsComponent } from './results/results.component';
 import { UsersComponent } from './users/users.component';
 import { TestbucketComponent } from './testbucket/testbucket.component';
 import { FunctionsComponent } from './functions/functions.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, TestsComponent, ResultsComponent, UsersComponent, TestbucketComponent, FunctionsComponent],
+  declarations: [HomeComponent, TestsComponent, ResultsComponent, UsersComponent, TestbucketComponent, FunctionsComponent, ScheduleComponent],
   imports: [
     CommonModule,
     FormsModule,
