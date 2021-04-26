@@ -135,8 +135,10 @@
 											[(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
 											[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}"
 											style="width: 20rem;">
+										<button *ngIf="showEditCreateModal"
+											class="btn btn-sm btn-outline-secondary ms-4 buttonwidth">GO</button>
 									</div>
-									<div class="d-flex flex-row mt-2">
+									<div class=" d-flex flex-row mt-2">
 										<span style="width: 10rem;">Expected Status</span>
 										<span [ngClass]="getStatusCodeClass(createForm.tests[selectedStepIndex]?.request.responseCode)"
 											*ngIf="!showEditCreateModal">{{getVerboseStatusCode(createForm.tests[selectedStepIndex]?.request.responseCode)}}</span>
