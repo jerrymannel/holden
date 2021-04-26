@@ -10,10 +10,11 @@ import { UsersComponent } from './users/users.component';
 import { TestbucketComponent } from './testbucket/testbucket.component';
 import { FunctionsComponent } from './functions/functions.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { EnvironmentComponent } from './environment/environment.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, TestsComponent, ResultsComponent, UsersComponent, TestbucketComponent, FunctionsComponent, ScheduleComponent],
+  declarations: [HomeComponent, TestsComponent, ResultsComponent, UsersComponent, TestbucketComponent, FunctionsComponent, ScheduleComponent, EnvironmentComponent],
   imports: [
     CommonModule,
     FormsModule,

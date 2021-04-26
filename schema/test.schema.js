@@ -8,13 +8,8 @@ let definition = {
 		"require": true,
 		"unique": true,
 	},
-	"url": ["String"],
 	"tests": [
 		{
-			"delimiters": {
-				"type": "Object",
-				"default": ["<%", "%>"]
-			},
 			"endpoint": "String",
 			"name": "String",
 			"request": {

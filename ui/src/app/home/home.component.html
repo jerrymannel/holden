@@ -16,6 +16,10 @@
 					(click)="menuClick('testbucket')"><i class="bi bi-basket fs-5"></i> Test buckets</a>
 			</li> -->
 			<li class="nav-item">
+				<a class="menuItem nav-link" aria-current="page" [ngClass]="{'menuSelected': menuItem == 'environments'}"
+					(click)="menuClick('environments')"><i class="bi bi-cloud-lightning fs-5"></i> Environments</a>
+			</li>
+			<li class="nav-item">
 				<a class="menuItem nav-link" aria-current="page" [ngClass]="{'menuSelected': menuItem == 'results'}"
 					(click)="menuClick('results')"><i class="bi bi-clipboard-check fs-5"></i> Runs</a>
 			</li>

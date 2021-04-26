@@ -7,6 +7,7 @@ import { ResultsComponent } from './results/results.component';
 import { TestbucketComponent } from './testbucket/testbucket.component';
 import { UsersComponent } from './users/users.component';
 import { FunctionsComponent } from './functions/functions.component';
+import { EnvironmentComponent } from './environment/environment.component';
 
 
 const routes: Routes = [
@@ -17,6 +18,7 @@ const routes: Routes = [
       { path: 'functions', component: FunctionsComponent },
       { path: 'testbucket', component: TestbucketComponent },
       { path: 'results', component: ResultsComponent },
+      { path: 'environments', component: EnvironmentComponent },
       { path: 'user', component: UsersComponent }
     ],
     canActivateChild: [AuthGuard]

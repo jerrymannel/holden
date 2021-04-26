@@ -14,12 +14,9 @@ export class TestsComponent implements OnInit {
   createForm = {
     _id: null,
     name: null,
-    url: [],
     tests: []
   };
   createStep = {
-    delimiters: ['<%', '%>'],
-    endpoint: null,
     name: `Step-${this.createForm.tests.length + 1}`,
     request: {
       method: 'GET',
@@ -40,15 +37,12 @@ export class TestsComponent implements OnInit {
   showDeleteConfirmation = false;
 
   operations = ['POST', 'GET', 'PUT', 'DELETE'];
-  delimiters = [
-    ['<%', '%>'],
-    ['{{', '}}'],
-    ['<<', '>>'],
-  ];
 
   tests: [];
   selectedTestID = null;
   selectedStepIndex = 0;
+  requestTab = 1;
+  responseTab = 1;
 
   errors = {
     createUpdate: null,
@@ -71,12 +65,9 @@ export class TestsComponent implements OnInit {
     this.createForm = {
       _id: null,
       name: null,
-      url: [],
       tests: []
     };
     this.createStep = {
-      delimiters: ['<%', '%>'],
-      endpoint: null,
       name: `Step-${this.createForm.tests.length + 1}`,
       request: {
         method: 'GET',
@@ -147,31 +138,8 @@ export class TestsComponent implements OnInit {
     this.selectedStepIndex = index;
   }
 
-  addUrl(): void {
-    console.log(this.url, this.urlIndex);
-    if (this.urlIndex != null) {
-      this.removeURL(this.urlIndex);
-      this.createForm.url.push(this.url);
-    } else if (this.url && this.createForm.url.indexOf(this.url) === -1) {
-      this.createForm.url.push(this.url);
-    }
-    this.url = null;
-    this.urlIndex = null;
-  }
-
-  editURL(url: string, index: number): void {
-    this.url = url;
-    this.urlIndex = index;
-  }
-
-  removeURL(index: number): void {
-    this.createForm.url.splice(index, 1);
-  }
-
   addStep(): void {
     this.createForm.tests.push({
-      delimiters: ['<%', '%>'],
-      endpoint: null,
       name: `Step-${this.createForm.tests.length + 1}`,
       request: {
         method: 'GET',
@@ -280,7 +248,6 @@ export class TestsComponent implements OnInit {
   validateForm(): boolean {
     this.__resetErrors();
     if (!this.createForm.name) { this.errors.validation = 'Name missing'; return true; }
-    if (this.createForm.url.length < 1) { this.errors.validation = 'At least one URL is required'; return true; }
     if (this.validateSteps()) { this.errors.validation = 'Error in step.'; return true; }
     return false;
   }
@@ -309,7 +276,6 @@ export class TestsComponent implements OnInit {
       if (!_test.name) { flag = true; this.stepErrors[_index] = "Missing name"; return; }
       if (!_test.endpoint) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
       if (!_test.request.uri) { flag = true; this.stepErrors[_index] = "Request URI missing"; return; }
-      if (this.createForm.url.indexOf(_test.endpoint) == -1) _test.endpoint = null;
     })
     return flag;
   }
