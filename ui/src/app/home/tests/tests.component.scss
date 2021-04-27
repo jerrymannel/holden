@@ -1,5 +1,12 @@
 .test {
 
+  .noHighlight {
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+
   .outlineButton {
     display: inline-block;
     line-height: 2rem;

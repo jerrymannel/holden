@@ -29,11 +29,12 @@
 		<div class="col-10 border p-2 test">
 			<div class="test-header">
 				<input type="text" class="w-75" [(ngModel)]="createForm.name" [ngClass]="{'is-invalid': !createForm.name}">
-				<button class="outlineButton float-end"><i class="bi bi-play-btn"></i></button>
-				<button class="outlineButton float-end" (click)="saveTest()" [disabled]="validateForm()"><i
-						class="bi bi-save"></i></button>
-				<button class="outlineButton float-end" (click)="showDeleteConfirmation = true;"><i
-						class="bi bi-trash2"></i></button>
+				<div class="btn-group btn-group-lg float-end" role="group" aria-label="Basic example">
+					<button class="btn btn-light" (click)="showDeleteConfirmation = true;"><i class="bi bi-trash2"></i></button>
+					<button class="btn btn-light" (click)="saveTest()" [disabled]="validateForm()"><i
+							class="bi bi-save"></i></button>
+					<button class="btn btn-light"><i class="bi bi-play-btn"></i></button>
+				</div>
 			</div>
 
 			<div class="d-flex bg-warning justify-content-end p-2 gap-2 shadow" *ngIf="showDeleteConfirmation">
@@ -42,141 +43,135 @@
 				<button class="btn btn-danger buttonwidth btn-sm" (click)="deleteTest()">Yes</button>
 			</div>
 
-			<div class="card">
+			<div class=" d-flex flex-row gap-1">
+				<!-- left sidebad -->
+				<div class="d-flex flex-column">
+					<ul class="list-group" style="width: 13rem;">
+						<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
+							(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
+							<span class='smallFont me-2'>{{i + 1}}</span>
+							<span class='smallFont'>{{step.name}}</span>
+							<span class="fakeLink float-end" (click)="removeStep(i)"><i class="bi bi-dash-circle"></i></span>
+							<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
+						</li>
+					</ul>
+					<button class="btn btn-light btn-sm mt-1 noHighlight" (click)="addStep()"><i class="bi bi-plus-circle"></i>
+						Add
+						step</button>
+				</div>
 
-				<!-- BODY -->
-				<div class="card-body">
+				<div class="d-flex flex-column flex-fill border p-2 gap-1">
+					<div class="d-flex flex-row">
+						<span style=" width: 10rem;">Name</span>
+						<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
+						<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+							[(ngModel)]="createForm.tests[selectedStepIndex].name"
+							[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}" style="width: 20rem;">
+					</div>
 
-					<div class=" d-flex flex-row gap-1">
+					<div class="d-flex flex-column mt-3">
+						<div class="mb-2">
+							<span style="width: 10rem;"><strong>Request</strong></span>
+							<button *ngIf="showEditCreateModal"
+								class="btn btn-sm btn-outline-secondary ms-4 buttonwidth float-end">GO</button>
+						</div>
+						<div class="d-flex flex-column border-top">
+							<div class="d-flex flex-row mt-2">
+								<span style="width: 10rem;">Method</span>
 
-						<div class="d-flex flex-column">
-							<button class="btn btn-dark btn-sm mb-1" *ngIf="showEditCreateModal" (click)="addStep()">Add step</button>
+								<span *ngIf="!showEditCreateModal">
+									<span class="badge bg-dark"
+										*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'POST'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+									<span class="badge bg-success"
+										*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'GET'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+									<span class="badge bg-primary"
+										*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'PUT'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+									<span class="badge bg-danger"
+										*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'DELETE'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
+								</span>
+								<span class="ms-2"
+									*ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
 
-							<ul class="list-group" style="width: 13rem;">
-								<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
-									(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
-									<span class='smallFont'>{{step.name}}</span>
-									<span class="fakeLink float-end" *ngIf="showEditCreateModal" (click)="removeStep(i)"><i
-											class="bi bi-dash-circle"></i></span>
-									<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
+								<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
+									[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
+									<option [ngValue]="'POST'">POST</option>
+									<option [ngValue]="'GET'">GET</option>
+									<option [ngValue]="'PUT'">PUT</option>
+									<option [ngValue]="'DELETE'">DELETE</option>
+								</select>
+								<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm ms-2"
+									[(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
+									[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}" style="width: 30rem;">
+							</div>
+							<ul class="nav nav-tabs mt-3">
+								<li class="nav-item">
+									<span class="nav-link fakeLink" (click)="requestTab = 1"
+										[ngClass]="{'active': requestTab == 1}">Header</span>
+								</li>
+								<li class=" nav-item">
+									<span class="nav-link fakeLink" (click)="requestTab = 2"
+										[ngClass]="{'active': requestTab == 2}">Body</span>
 								</li>
 							</ul>
-						</div>
-
-						<div class="d-flex flex-column flex-fill border p-2 gap-1">
-							<div class="d-flex flex-row">
-								<span style="width: 10rem;">Name</span>
-								<span *ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.name}}</span>
-								<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-									[(ngModel)]="createForm.tests[selectedStepIndex].name"
-									[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}" style="width: 20rem;">
+							<div class="d-flex flex-row mt-2" *ngIf="requestTab == 1">
+								<span *ngIf="!showEditCreateModal"
+									class="code w-100">{{createForm.tests[selectedStepIndex]?.request.headers
+									|| "Nil"}}</span>
+								<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+									[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="8"></textarea>
 							</div>
-							<div class="d-flex flex-column mt-3">
-								<div class="mb-2">
-									<span style="width: 10rem;"><strong>Request</strong></span>
-									<button *ngIf="showEditCreateModal"
-										class="btn btn-sm btn-outline-secondary ms-4 buttonwidth float-end">GO</button>
-								</div>
-								<div class="d-flex flex-column border-top">
-									<div class="d-flex flex-row mt-2">
-										<span style="width: 10rem;">Method</span>
-
-										<span *ngIf="!showEditCreateModal">
-											<span class="badge bg-dark"
-												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'POST'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
-											<span class="badge bg-success"
-												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'GET'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
-											<span class="badge bg-primary"
-												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'PUT'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
-											<span class="badge bg-danger"
-												*ngIf="createForm.tests[selectedStepIndex]?.request.method == 'DELETE'">{{createForm.tests[selectedStepIndex]?.request.method}}</span>
-										</span>
-										<span class="ms-2"
-											*ngIf="!showEditCreateModal">{{createForm.tests[selectedStepIndex]?.request.uri}}</span>
-
-										<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 5rem;"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
-											<option [ngValue]="'POST'">POST</option>
-											<option [ngValue]="'GET'">GET</option>
-											<option [ngValue]="'PUT'">PUT</option>
-											<option [ngValue]="'DELETE'">DELETE</option>
-										</select>
-										<input *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm ms-2"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
-											[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}"
-											style="width: 30rem;">
-									</div>
-									<ul class="nav nav-tabs mt-3">
-										<li class="nav-item">
-											<span class="nav-link fakeLink" (click)="requestTab = 1"
-												[ngClass]="{'active': requestTab == 1}">Header</span>
-										</li>
-										<li class=" nav-item">
-											<span class="nav-link fakeLink" (click)="requestTab = 2"
-												[ngClass]="{'active': requestTab == 2}">Body</span>
-										</li>
-									</ul>
-									<div class="d-flex flex-row mt-2" *ngIf="requestTab == 1">
-										<span *ngIf="!showEditCreateModal"
-											class="code w-100">{{createForm.tests[selectedStepIndex]?.request.headers
-											|| "Nil"}}</span>
-										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="8"></textarea>
-									</div>
-									<div class="d-flex flex-row mt-2" *ngIf="requestTab == 2">
-										<span *ngIf="!showEditCreateModal"
-											class="code w-100">{{createForm.tests[selectedStepIndex]?.request.body
-											||
-											"Nil"}}</span>
-										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="8"></textarea>
-									</div>
-								</div>
-							</div>
-							<div class="d-flex flex-column mt-3">
-								<span style="width: 10rem;"><strong>Response</strong></span>
-								<div class=" d-flex flex-row mt-2 pt-2 border-top">
-									<span style=" width: 10rem;">Expected Status</span>
-									<span [ngClass]="getStatusCodeClass(createForm.tests[selectedStepIndex]?.request.responseCode)"
-										*ngIf="!showEditCreateModal">{{getVerboseStatusCode(createForm.tests[selectedStepIndex]?.request.responseCode)}}</span>
-									<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 20rem;"
-										[(ngModel)]="createForm.tests[selectedStepIndex].request.responseCode">
-										<option [ngValue]="statusCode[0]" *ngFor="let statusCode of httpStatusCodes">{{statusCode[1]}}
-										</option>
-									</select>
-								</div>
-								<ul class="nav nav-tabs mt-2">
-									<li class="nav-item">
-										<span class="nav-link fakeLink" (click)="responseTab = 1"
-											[ngClass]="{'active': responseTab == 1}">Header</span>
-									</li>
-									<li class=" nav-item">
-										<span class="nav-link fakeLink" (click)="responseTab = 2"
-											[ngClass]="{'active': responseTab == 2}">Body</span>
-									</li>
-								</ul>
-								<div class="d-flex flex-column">
-									<div class="d-flex flex-row mt-2" *ngIf="responseTab == 1">
-										<span *ngIf="!showEditCreateModal"
-											class="code w-100">{{createForm.tests[selectedStepIndex]?.response?.headers
-											|| "Nil"}}</span>
-										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="8"></textarea>
-									</div>
-									<div class="d-flex flex-row mt-2" *ngIf="responseTab == 2">
-										<span *ngIf="!showEditCreateModal"
-											class="code w-100">{{createForm.tests[selectedStepIndex]?.response?.body
-											|| "Nil"}}</span>
-										<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
-											[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="8"></textarea>
-									</div>
-								</div>
+							<div class="d-flex flex-row mt-2" *ngIf="requestTab == 2">
+								<span *ngIf="!showEditCreateModal"
+									class="code w-100">{{createForm.tests[selectedStepIndex]?.request.body
+									||
+									"Nil"}}</span>
+								<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+									[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="8"></textarea>
 							</div>
 						</div>
 					</div>
-
+					<div class="d-flex flex-column mt-3">
+						<span style="width: 10rem;"><strong>Response</strong></span>
+						<div class=" d-flex flex-row mt-2 pt-2 border-top">
+							<span style=" width: 10rem;">Expected Status</span>
+							<span [ngClass]="getStatusCodeClass(createForm.tests[selectedStepIndex]?.request.responseCode)"
+								*ngIf="!showEditCreateModal">{{getVerboseStatusCode(createForm.tests[selectedStepIndex]?.request.responseCode)}}</span>
+							<select *ngIf="showEditCreateModal" class="form-select form-select-sm" style="width: 20rem;"
+								[(ngModel)]="createForm.tests[selectedStepIndex].request.responseCode">
+								<option [ngValue]="statusCode[0]" *ngFor="let statusCode of httpStatusCodes">{{statusCode[1]}}
+								</option>
+							</select>
+						</div>
+						<ul class="nav nav-tabs mt-2">
+							<li class="nav-item">
+								<span class="nav-link fakeLink" (click)="responseTab = 1"
+									[ngClass]="{'active': responseTab == 1}">Header</span>
+							</li>
+							<li class=" nav-item">
+								<span class="nav-link fakeLink" (click)="responseTab = 2"
+									[ngClass]="{'active': responseTab == 2}">Body</span>
+							</li>
+						</ul>
+						<div class="d-flex flex-column">
+							<div class="d-flex flex-row mt-2" *ngIf="responseTab == 1">
+								<span *ngIf="!showEditCreateModal"
+									class="code w-100">{{createForm.tests[selectedStepIndex]?.response?.headers
+									|| "Nil"}}</span>
+								<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+									[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="8"></textarea>
+							</div>
+							<div class="d-flex flex-row mt-2" *ngIf="responseTab == 2">
+								<span *ngIf="!showEditCreateModal"
+									class="code w-100">{{createForm.tests[selectedStepIndex]?.response?.body
+									|| "Nil"}}</span>
+								<textarea *ngIf="showEditCreateModal" type="text" class="form-control form-control-sm"
+									[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="8"></textarea>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
+
 		</div>
 
 	</div>
