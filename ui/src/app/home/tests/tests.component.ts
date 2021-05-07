@@ -274,7 +274,6 @@ export class TestsComponent implements OnInit {
     this.stepErrors = [];
     this.createForm.tests.forEach((_test, _index) => {
       if (!_test.name) { flag = true; this.stepErrors[_index] = "Missing name"; return; }
-      if (!_test.endpoint) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
       if (!_test.request.uri) { flag = true; this.stepErrors[_index] = "Request URI missing"; return; }
     })
     return flag;

@@ -27,14 +27,14 @@
 		</div>
 
 		<div class="col-10 border p-2 test">
-			<div class="test-header">
-				<input type="text" class="w-75" [(ngModel)]="createForm.name" [ngClass]="{'is-invalid': !createForm.name}">
-				<div class="btn-group btn-group-lg float-end" role="group" aria-label="Basic example">
-					<button class="btn btn-light" (click)="showDeleteConfirmation = true;"><i class="bi bi-trash2"></i></button>
-					<button class="btn btn-light" (click)="saveTest()" [disabled]="validateForm()"><i
-							class="bi bi-save"></i></button>
-					<button class="btn btn-light"><i class="bi bi-play-btn"></i></button>
-				</div>
+			<div class="input-group mb-3">
+				<input type="text" class="form-control w-75" [(ngModel)]="createForm.name"
+					[ngClass]="{'is-invalid': !createForm.name}">
+				<button class="btn btn-danger btn-sm" (click)="showDeleteConfirmation = true;"><i class="bi bi-trash2"></i>
+					Delete </button>
+				<button class="btn btn-success btn-sm" (click)="saveTest()" [disabled]="validateForm()"><i
+						class="bi bi-save"></i>
+					Save</button>
 			</div>
 
 			<div class="d-flex bg-warning justify-content-end p-2 gap-2 shadow" *ngIf="showDeleteConfirmation">
@@ -46,7 +46,7 @@
 			<div class=" d-flex flex-row gap-1" *ngIf="createForm.tests.length > 0">
 				<!-- left sidebad -->
 				<div class="d-flex flex-column">
-					<ul class="list-group" style="width: 13rem;">
+					<ul class="list-group" style="width: 15rem;">
 						<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
 							(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
 							<span class='smallFont me-2'>{{i + 1}}</span>
@@ -61,9 +61,15 @@
 
 				<div class="d-flex flex-column flex-fill border p-2 gap-1">
 					<div class="d-flex flex-row">
-						<input type="text" class="form-control form-control-sm"
-							[(ngModel)]="createForm.tests[selectedStepIndex].name"
-							[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}" class="w-100">
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control" [(ngModel)]="createForm.tests[selectedStepIndex].name"
+								[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}">
+							<button class="btn btn-outline-dark btn-sm"><i class="bi bi-play-btn"></i> Run</button>
+						</div>
+					</div>
+
+					<div class="d-flex flex-row" *ngIf="stepErrors[selectedStepIndex]">
+						<span class="text-danger">Error: {{stepErrors[selectedStepIndex]}}</span>
 					</div>
 
 					<div class="d-flex flex-column mt-3">
@@ -73,7 +79,7 @@
 								class="btn btn-sm btn-outline-secondary ms-4 buttonwidth float-end">GO</button>
 						</div>
 						<div class="d-flex flex-column border-top">
-							<div class="d-flex flex-row mt-2">
+							<div class="d-flex flex-row my-2">
 								<span style="width: 10rem;">Method</span>
 								<select class="form-select form-select-sm" style="width: 5rem;"
 									[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
@@ -96,12 +102,12 @@
 										[ngClass]="{'active': requestTab == 2}">Body</span>
 								</li>
 							</ul>
-							<div class="d-flex flex-row mt-2" *ngIf="requestTab == 1">
-								<textarea type="text" class="form-control form-control-sm"
+							<div class="d-flex flex-row" *ngIf="requestTab == 1">
+								<textarea type="text" class="form-control form-control-sm border-top-0"
 									[(ngModel)]="createForm.tests[selectedStepIndex].request.headers" rows="8"></textarea>
 							</div>
-							<div class="d-flex flex-row mt-2" *ngIf="requestTab == 2">
-								<textarea type="text" class="form-control form-control-sm"
+							<div class="d-flex flex-row" *ngIf="requestTab == 2">
+								<textarea type="text" class="form-control form-control-sm border-top-0"
 									[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="8"></textarea>
 							</div>
 						</div>
@@ -127,12 +133,12 @@
 							</li>
 						</ul>
 						<div class="d-flex flex-column">
-							<div class="d-flex flex-row mt-2" *ngIf="responseTab == 1">
-								<textarea type="text" class="form-control form-control-sm"
+							<div class="d-flex flex-row" *ngIf="responseTab == 1">
+								<textarea type="text" class="form-control form-control-sm border-top-0"
 									[(ngModel)]="createForm.tests[selectedStepIndex].response.headers" rows="8"></textarea>
 							</div>
-							<div class="d-flex flex-row mt-2" *ngIf="responseTab == 2">
-								<textarea type="text" class="form-control form-control-sm"
+							<div class="d-flex flex-row" *ngIf="responseTab == 2">
+								<textarea type="text" class="form-control form-control-sm border-top-0"
 									[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="8"></textarea>
 							</div>
 						</div>
