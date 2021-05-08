@@ -166,6 +166,14 @@ export class TestsComponent implements OnInit {
     }
   }
 
+  reorder(direction, index: number): void {
+    if (direction == -1 && index == 0) return;
+    if (direction == 1 && index == (this.createForm.tests.length - 1)) return;
+    let step = this.createForm.tests[index + direction]
+    this.createForm.tests[index + direction] = this.createForm.tests[index]
+    this.createForm.tests[index] = step
+  }
+
   compareDelimiters(arg1, arg2: any): boolean {
     return arg1?.join(',') === arg2?.join(',');
   }

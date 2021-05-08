@@ -52,6 +52,10 @@
 							<span class='smallFont me-2'>{{i + 1}}</span>
 							<span class='smallFont'>{{step.name}}</span>
 							<span class="fakeLink float-end" (click)="removeStep(i)"><i class="bi bi-dash-circle"></i></span>
+							<i class="bi bi-arrow-down-square fakeLink float-end" (click)="reorder(1, i)"
+								[ngClass]="{'text-muted': i == createForm.tests.length - 1}"></i>
+							<i class="bi bi-arrow-up-square fakeLink float-end mx-1" (click)="reorder(-1, i)"
+								[ngClass]="{'text-muted': i == 0}"></i>
 							<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
 						</li>
 					</ul>

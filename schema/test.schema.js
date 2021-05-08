@@ -8,6 +8,7 @@ let definition = {
 		"require": true,
 		"unique": true,
 	},
+	"url": ["String"],
 	"tests": [
 		{
 			"endpoint": "String",
