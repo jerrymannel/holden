@@ -8,7 +8,7 @@ let definition = {
 		"require": true,
 		"unique": true,
 	},
-	"url": ["String"],
+	"urls": ["String"],
 	"tests": [
 		{
 			"endpoint": "String",

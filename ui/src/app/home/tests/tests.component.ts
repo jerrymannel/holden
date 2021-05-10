@@ -14,6 +14,7 @@ export class TestsComponent implements OnInit {
   createForm = {
     _id: null,
     name: null,
+    urls: [],
     tests: []
   };
   createStep = {
@@ -30,8 +31,6 @@ export class TestsComponent implements OnInit {
       body: null,
     }
   };
-  url: string;
-  urlIndex = null;
 
   showEditCreateModal = false;
   showDeleteConfirmation = false;
@@ -65,6 +64,7 @@ export class TestsComponent implements OnInit {
     this.createForm = {
       _id: null,
       name: null,
+      urls: [],
       tests: []
     };
     this.createStep = {
@@ -112,7 +112,6 @@ export class TestsComponent implements OnInit {
   showForm(): void {
     this.selectedTestID = null;
     this.showEditCreateModal = true;
-    this.urlIndex = null;
     this.__resetForm();
     this.__resetErrors();
     this.addStep();
