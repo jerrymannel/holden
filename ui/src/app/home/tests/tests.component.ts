@@ -19,6 +19,7 @@ export class TestsComponent implements OnInit {
   };
   createStep = {
     name: `Step-${this.createForm.tests.length + 1}`,
+    url: null,
     request: {
       method: 'GET',
       uri: null,
@@ -31,6 +32,9 @@ export class TestsComponent implements OnInit {
       body: null,
     }
   };
+
+  url: string;
+  selectedUrlIndex: number;
 
   showEditCreateModal = false;
   showDeleteConfirmation = false;
@@ -61,6 +65,8 @@ export class TestsComponent implements OnInit {
   }
 
   __resetForm(): void {
+    this.url = null;
+    this.selectedUrlIndex = null;
     this.createForm = {
       _id: null,
       name: null,
@@ -69,6 +75,7 @@ export class TestsComponent implements OnInit {
     };
     this.createStep = {
       name: `Step-${this.createForm.tests.length + 1}`,
+      url: null,
       request: {
         method: 'GET',
         uri: null,
@@ -132,14 +139,23 @@ export class TestsComponent implements OnInit {
       );
   }
 
+  saveUrl(): void {
+    this.createForm.urls[this.selectedUrlIndex] = this.url;
+    this.url = null;
+    this.selectedUrlIndex = null;
+  }
+
   selectStep(index: number): void {
     this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
     this.selectedStepIndex = index;
   }
 
   addStep(): void {
+    let url = null;
+    if (this.createForm.urls.length > 0) url = this.createForm.urls[0];
     this.createForm.tests.push({
       name: `Step-${this.createForm.tests.length + 1}`,
+      url: url,
       request: {
         method: 'GET',
         uri: null,
