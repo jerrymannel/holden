@@ -45,7 +45,7 @@
 			</div>
 
 			<div class="d-flex flex-row my-2">
-				<span style="width: 10rem;">URLs</span>
+				<span style="width: 10rem;">Endpoints</span>
 				<div class="d-flex flex-column">
 					<div class="input-group input-group-sm mb-1" style="width: 50rem;">
 						<input type="text" class="form-control" [(ngModel)]="url">
@@ -63,7 +63,7 @@
 				</div>
 			</div>
 
-			<div class=" d-flex flex-row gap-1 mt-2" *ngIf="createForm.tests.length > 0">
+			<div class=" d-flex flex-row gap-1 mt-2">
 				<!-- left sidebad -->
 				<div class="d-flex flex-column">
 					<ul class="list-group" style="width: 15rem;">
@@ -103,6 +103,13 @@
 								class="btn btn-sm btn-outline-secondary ms-4 buttonwidth float-end">GO</button>
 						</div>
 						<div class="d-flex flex-column border-top">
+							<div class=" d-flex flex-row mt-2">
+								<span style=" width: 10rem;">Endpoint</span>
+								<select class="form-select form-select-sm" style="width: 20rem;"
+									[(ngModel)]="createForm.tests[selectedStepIndex].url">
+									<option [ngValue]="urlIndex" *ngFor="let urlIndex of createForm.urls">{{urlIndex}} </option>
+								</select>
+							</div>
 							<div class="d-flex flex-row my-2">
 								<span style="width: 10rem;">Method</span>
 								<select class="form-select form-select-sm" style="width: 5rem;"

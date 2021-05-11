@@ -11,7 +11,7 @@ let definition = {
 	"urls": ["String"],
 	"tests": [
 		{
-			"endpoint": "String",
+			"url": "String",
 			"name": "String",
 			"request": {
 				"method": {
