@@ -271,6 +271,8 @@ export class TestsComponent implements OnInit {
   validateForm(): boolean {
     this.__resetErrors();
     if (!this.createForm.name) { this.errors.validation = 'Name missing'; return true; }
+    if (this.createForm.urls.length < 1) { this.errors.validation = 'At least one URL must be provided'; return true; }
+    if (this.createForm.tests.length < 1) { this.errors.validation = 'At least one step must be present'; return true; }
     if (this.validateSteps()) { this.errors.validation = 'Error in step.'; return true; }
     return false;
   }
@@ -298,6 +300,8 @@ export class TestsComponent implements OnInit {
     this.createForm.tests.forEach((_test, _index) => {
       if (!_test.name) { flag = true; this.stepErrors[_index] = "Missing name"; return; }
       if (!_test.request.uri) { flag = true; this.stepErrors[_index] = "Request URI missing"; return; }
+      if (!_test.url) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
+      if (this.createForm.urls.indexOf(_test.url) == -1) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
     })
     return flag;
   }

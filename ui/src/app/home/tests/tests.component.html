@@ -56,12 +56,15 @@
 					<div class="border mb-1" *ngFor="let urlList of createForm.urls; let urlIndex = index">
 						<span style="width: 50rem;" class="px-2">{{urlList}}</span>
 						<i (click)="createForm.urls.splice(urlIndex, 1)"
-							class="bi bi-trash-fill float-end px-2 mx-2 text-secondary fakeLink"></i>
+							class="bi bi-trash-fill float-end px-1 mx-1 text-secondary fakeLink"
+							*ngIf="this.createForm.urls.length > 1"></i>
 						<i (click)="selectedUrlIndex=urlIndex; url=urlList;"
-							class="bi bi-pencil float-end text-secondary fakeLink"></i>
+							class="bi bi-pencil float-end px-1 mx-1 text-secondary fakeLink"></i>
 					</div>
 				</div>
 			</div>
+
+			<small class="d-flex flex-row my-2 text-center text-danger">{{errors.validation}}</small>
 
 			<div class=" d-flex flex-row gap-1 mt-2">
 				<!-- left sidebad -->
@@ -71,19 +74,25 @@
 							(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
 							<span class='smallFont me-2'>{{i + 1}}</span>
 							<span class='smallFont'>{{step.name}}</span>
-							<span class="fakeLink float-end" (click)="removeStep(i)"><i class="bi bi-dash-circle"></i></span>
-							<i class="bi bi-arrow-down-square fakeLink float-end" (click)="reorder(1, i)"
-								[ngClass]="{'text-muted': i == createForm.tests.length - 1}"></i>
-							<i class="bi bi-arrow-up-square fakeLink float-end mx-1" (click)="reorder(-1, i)"
-								[ngClass]="{'text-muted': i == 0}"></i>
-							<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
+							<span *ngIf="createForm.tests.length > 1">
+								<span class="fakeLink float-end" (click)="removeStep(i)"><i class="bi bi-dash-circle"></i></span>
+								<i class="bi bi-arrow-down-square fakeLink float-end me-1" (click)=" reorder(1, i)"
+									[ngClass]="{'text-muted': i == createForm.tests.length - 1}"></i>
+								<i class="bi bi-arrow-up-square fakeLink float-end mx-1" (click)="reorder(-1, i)"
+									[ngClass]="{'text-muted': i == 0}"></i>
+								<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
+							</span>
 						</li>
 					</ul>
 					<button class="btn btn-light btn-sm mt-1 noHighlight" (click)="addStep()"><i class="bi bi-plus-circle"></i>
 						Add step</button>
 				</div>
 
-				<div class="d-flex flex-column flex-fill border p-2 gap-1">
+				<div class="d-flex flex-column flex-fill border p-2 gap-1" *ngIf="createForm.tests.length < 1">
+					<i class="text-center">No steps. Add a step to continue</i>
+				</div>
+
+				<div class="d-flex flex-column flex-fill border p-2 gap-1" *ngIf="createForm.tests.length > 0">
 					<div class="d-flex flex-row">
 						<div class="input-group input-group-sm">
 							<input type="text" class="form-control" [(ngModel)]="createForm.tests[selectedStepIndex].name"
@@ -92,9 +101,8 @@
 						</div>
 					</div>
 
-					<div class="d-flex flex-row" *ngIf="stepErrors[selectedStepIndex]">
-						<span class="text-danger">Error: {{stepErrors[selectedStepIndex]}}</span>
-					</div>
+					<small class="d-flex flex-row text-danger" *ngIf="stepErrors[selectedStepIndex]">Error:
+						{{stepErrors[selectedStepIndex]}}</small>
 
 					<div class="d-flex flex-column mt-3">
 						<div class="mb-2">
