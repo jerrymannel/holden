@@ -30,6 +30,9 @@
 			<div class="input-group">
 				<input type="text" class="form-control w-75" [(ngModel)]="createForm.name"
 					[ngClass]="{'is-invalid': !createForm.name}">
+				<button class="btn btn-outline-primary btn-sm" (click)="saveTest()" [disabled]="validateForm()"><i
+						class="bi bi-lightning-fill"></i>
+					Run</button>
 				<button class="btn btn-outline-dark btn-sm" (click)="showDeleteConfirmation = true;"><i
 						class="bi bi-trash-fill"></i>
 					Delete </button>
@@ -94,12 +97,8 @@
 
 				<div class="d-flex flex-column flex-fill border p-2 gap-1" *ngIf="createForm.tests.length > 0">
 					<div class="d-flex flex-row">
-						<div class="input-group input-group-sm">
-							<input type="text" class="form-control" [(ngModel)]="createForm.tests[selectedStepIndex].name"
-								[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}">
-							<button class="btn btn-outline-dark btn-sm" (click)="runStep(selectedStepIndex)"><i
-									class="bi bi-play-btn"></i> Run</button>
-						</div>
+						<input type="text" class="form-control form-control-sm" [(ngModel)]="
+							createForm.tests[selectedStepIndex].name" [ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].name}">
 					</div>
 
 					<small class="d-flex flex-row text-danger" *ngIf="stepErrors[selectedStepIndex]">Error:
@@ -120,17 +119,19 @@
 								</select>
 							</div>
 							<div class="d-flex flex-row my-2">
-								<span style="width: 10rem;">Method</span>
-								<select class="form-select form-select-sm" style="width: 5rem;"
-									[(ngModel)]="createForm.tests[selectedStepIndex].request.method">
-									<option [ngValue]="'POST'">POST</option>
-									<option [ngValue]="'GET'">GET</option>
-									<option [ngValue]="'PUT'">PUT</option>
-									<option [ngValue]="'DELETE'">DELETE</option>
-								</select>
-								<input type="text" class="form-control form-control-sm ms-2"
-									[(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
-									[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}">
+								<span style="width: 10rem;">URI</span>
+								<div class="input-group input-group-sm ms-4">
+									<select class="form-select" [(ngModel)]="createForm.tests[selectedStepIndex].request.method">
+										<option [ngValue]="'POST'">POST</option>
+										<option [ngValue]="'GET'">GET</option>
+										<option [ngValue]="'PUT'">PUT</option>
+										<option [ngValue]="'DELETE'">DELETE</option>
+									</select>
+									<input type="text" class="form-control" [(ngModel)]="createForm.tests[selectedStepIndex].request.uri"
+										[ngClass]="{'is-invalid': !createForm.tests[selectedStepIndex].request.uri}" style="width: 65%;">
+									<button class="btn btn-outline-dark btn-sm" (click)="runStep(selectedStepIndex)"><i
+											class="bi bi-play-fill"></i> Request</button>
+								</div>
 							</div>
 							<ul class="nav nav-tabs">
 								<li class="nav-item">

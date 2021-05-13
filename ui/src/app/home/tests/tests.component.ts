@@ -289,15 +289,18 @@ export class TestsComponent implements OnInit {
   }
 
   runStep(stepId: number): void {
-    console.log(stepId)
     if (!this.createForm._id) {
       alert("Please save the test before running")
       return
     }
     let payload = this.createForm.tests[stepId];
-    this.commonService.post('test', `/${this.createForm._id}/${stepId}`, payload)
+    this.commonService.post('test', `/run`, payload)
       .subscribe(
-        data => console.log(data),
+        data => {
+          this.createForm.tests[stepId].response.headers = JSON.stringify(data.headers, null, '  ');
+          this.createForm.tests[stepId].response.body = JSON.stringify(data.data, null, '  ');
+          this.createForm.tests[stepId].request.responseCode = data.status;
+        },
         err => console.log(err)
       )
   }
