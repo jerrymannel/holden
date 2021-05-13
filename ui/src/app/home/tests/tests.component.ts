@@ -125,13 +125,13 @@ export class TestsComponent implements OnInit {
   }
 
   selectTest(testID: string): void {
-    this.selectedTestID = testID;
     this.showEditCreateModal = false;
     this.commonService.get('test', `/${testID}`, null)
       .subscribe(
         test => {
           this.createForm = JSON.parse(JSON.stringify(test));
-          if (this.createForm.tests.length > 0) {
+          if (this.createForm.tests.length > 0 && testID != this.selectedTestID) {
+            this.selectedTestID = testID;
             this.selectStep(0);
           }
         },
@@ -251,7 +251,6 @@ export class TestsComponent implements OnInit {
   }
 
   saveTest(): void {
-    console.log(this.createForm);
     if (this.selectedTestID) {
       this.commonService.put('test', `/${this.selectedTestID}`, this.createForm)
         .subscribe(
@@ -277,23 +276,6 @@ export class TestsComponent implements OnInit {
     return false;
   }
 
-  // {
-  //   delimiters: ['<%', '%>'],
-  //   endpoint: null,
-  //   name: `Step-${this.createForm.tests.length + 1}`,
-  //   request: {
-  //     method: 'GET',
-  //     uri: null,
-  //     headers: null,
-  //     body: null,
-  //     responseCode: 200
-  //   },
-  //   response: {
-  //     headers: null,
-  //     body: null,
-  //   }
-  // };
-
   validateSteps(): boolean {
     let flag = false;
     this.stepErrors = [];
@@ -304,6 +286,20 @@ export class TestsComponent implements OnInit {
       if (this.createForm.urls.indexOf(_test.url) == -1) { flag = true; this.stepErrors[_index] = "Endpoint missing"; return; }
     })
     return flag;
+  }
+
+  runStep(stepId: number): void {
+    console.log(stepId)
+    if (!this.createForm._id) {
+      alert("Please save the test before running")
+      return
+    }
+    let payload = this.createForm.tests[stepId];
+    this.commonService.post('test', `/${this.createForm._id}/${stepId}`, payload)
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      )
   }
 
 }
