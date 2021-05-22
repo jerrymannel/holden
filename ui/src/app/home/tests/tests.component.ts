@@ -116,6 +116,22 @@ export class TestsComponent implements OnInit {
       );
   }
 
+  __convertJSONToString(_data: any): any {
+    _data.request.headers = _data.request.headers ?? JSON.stringify(_data.request.headers)
+    _data.request.body = _data.request.body ?? JSON.stringify(_data.request.body)
+    _data.response.headers = _data.response.headers ?? JSON.stringify(_data.response.headers)
+    _data.response.body = _data.response.body ?? JSON.stringify(_data.response.body)
+    return _data
+  }
+
+  __convertStringToJSON(_data: any): any {
+    _data.request.headers = _data.request.headers ?? JSON.parse(_data.request.headers)
+    _data.request.body = _data.request.body ?? JSON.parse(_data.request.body)
+    _data.response.headers = _data.response.headers ?? JSON.parse(_data.response.headers)
+    _data.response.body = _data.response.body ?? JSON.parse(_data.response.body)
+    return _data
+  }
+
   showForm(): void {
     this.selectedTestID = null;
     this.showEditCreateModal = true;
@@ -148,6 +164,7 @@ export class TestsComponent implements OnInit {
   selectStep(index: number): void {
     this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
     this.selectedStepIndex = index;
+    this.createStep = this.__convertJSONToString(this.createStep)
   }
 
   addStep(): void {
@@ -251,13 +268,15 @@ export class TestsComponent implements OnInit {
   }
 
   saveTest(): void {
+    let data = JSON.parse(JSON.stringify(this.createForm))
+    data.tests.map(_test => this.__convertStringToJSON(_test))
     if (this.selectedTestID) {
-      this.commonService.put('test', `/${this.selectedTestID}`, this.createForm)
+      this.commonService.put('test', `/${this.selectedTestID}`, data)
         .subscribe(
           () => this.selectTest(this.selectedTestID)
         );
     } else {
-      this.commonService.post('test', '/', this.createForm)
+      this.commonService.post('test', '/', data)
         .subscribe(
           data => {
             this.selectTest(data._id);
@@ -293,7 +312,8 @@ export class TestsComponent implements OnInit {
       alert("Please save the test before running")
       return
     }
-    let payload = this.createForm.tests[stepId];
+    let payload = JSON.parse(JSON.stringify(this.createStep));
+    payload = this.__convertStringToJSON(payload)
     this.commonService.post('test', `/run`, payload)
       .subscribe(
         data => {
