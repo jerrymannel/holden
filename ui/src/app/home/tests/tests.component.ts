@@ -88,10 +88,10 @@ export class TestsComponent implements OnInit {
 
   __convert(_toJSON: boolean, _data: any): any {
     let data = JSON.parse(JSON.stringify(_data))
-    if (data.request.headers) data.request.headers = _toJSON ? JSON.parse(data.request.headers) : JSON.stringify(data.request.headers);
-    if (data.request.body) data.request.body = _toJSON ? JSON.parse(data.request.body) : JSON.stringify(data.request.body);
-    if (data.response.headers) data.response.headers = _toJSON ? JSON.parse(data.response.headers) : JSON.stringify(data.response.headers);
-    if (data.response.body) data.response.body = _toJSON ? JSON.parse(data.response.body) : JSON.stringify(data.response.body);
+    if (data.request.headers) data.request.headers = _toJSON ? JSON.parse(data.request.headers) : JSON.stringify(data.request.headers, null, ' ');
+    if (data.request.body) data.request.body = _toJSON ? JSON.parse(data.request.body) : JSON.stringify(data.request.body, null, ' ');
+    if (data.response.headers) data.response.headers = _toJSON ? JSON.parse(data.response.headers) : JSON.stringify(data.response.headers, null, ' ');
+    if (data.response.body) data.response.body = _toJSON ? JSON.parse(data.response.body) : JSON.stringify(data.response.body, null, ' ');
     return data;
   }
 
@@ -109,9 +109,9 @@ export class TestsComponent implements OnInit {
       .subscribe(
         test => {
           this.createForm = JSON.parse(JSON.stringify(test));
+          this.createForm.tests = this.createForm.tests.map(_tests => this.__convert(false, _tests));
           if (this.createForm.tests.length > 0 && testID != this.selectedTestID) {
             this.selectedTestID = testID;
-            this.selectStep(0);
           }
         },
         () => this.errors.fetch = 'Error fetching details of ' + testID
@@ -125,11 +125,7 @@ export class TestsComponent implements OnInit {
   }
 
   selectStep(index: number): void {
-    this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
     this.selectedStepIndex = index;
-    console.log(this.createStep)
-    this.createStep = this.__convert(false, this.createStep)
-    console.log(this.createStep)
   }
 
   addStep(): void {
@@ -155,7 +151,6 @@ export class TestsComponent implements OnInit {
 
   removeStep(index: number): void {
     this.createForm.tests.splice(index, 1);
-    this.createStep = null;
     if (this.createForm.tests.length > 0) {
       this.selectStep(0);
     } else {
@@ -234,10 +229,7 @@ export class TestsComponent implements OnInit {
 
   saveTest(): void {
     let data = JSON.parse(JSON.stringify(this.createForm))
-    data.tests.map(_test => this.__convert(true, _test))
-    data.tests.forEach(_test => {
-      console.log(typeof _test.response.headers)
-    });
+    data.tests = data.tests.map(_test => this.__convert(true, _test))
     if (this.selectedTestID) {
       this.commonService.put('test', `/${this.selectedTestID}`, data)
         .subscribe(
@@ -280,7 +272,7 @@ export class TestsComponent implements OnInit {
       alert("Please save the test before running")
       return
     }
-    let payload = JSON.parse(JSON.stringify(this.createStep));
+    let payload = JSON.parse(JSON.stringify(this.createForm.tests[stepId]));
     payload = this.__convert(true, payload)
     this.commonService.post('test', `/run`, payload)
       .subscribe(
