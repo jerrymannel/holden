@@ -17,21 +17,6 @@ export class TestsComponent implements OnInit {
     urls: [],
     tests: []
   };
-  createStep = {
-    name: `Step-${this.createForm.tests.length + 1}`,
-    url: null,
-    request: {
-      method: 'GET',
-      uri: null,
-      headers: null,
-      body: null,
-      responseCode: 200
-    },
-    response: {
-      headers: null,
-      body: null,
-    }
-  };
 
   url: string;
   selectedUrlIndex: number;
@@ -73,21 +58,6 @@ export class TestsComponent implements OnInit {
       urls: [],
       tests: []
     };
-    this.createStep = {
-      name: `Step-${this.createForm.tests.length + 1}`,
-      url: null,
-      request: {
-        method: 'GET',
-        uri: null,
-        headers: null,
-        body: null,
-        responseCode: 200
-      },
-      response: {
-        headers: null,
-        body: null,
-      }
-    };
   }
 
   __resetErrors(): void {
@@ -116,20 +86,13 @@ export class TestsComponent implements OnInit {
       );
   }
 
-  __convertJSONToString(_data: any): any {
-    _data.request.headers = _data.request.headers ?? JSON.stringify(_data.request.headers)
-    _data.request.body = _data.request.body ?? JSON.stringify(_data.request.body)
-    _data.response.headers = _data.response.headers ?? JSON.stringify(_data.response.headers)
-    _data.response.body = _data.response.body ?? JSON.stringify(_data.response.body)
-    return _data
-  }
-
-  __convertStringToJSON(_data: any): any {
-    _data.request.headers = _data.request.headers ?? JSON.parse(_data.request.headers)
-    _data.request.body = _data.request.body ?? JSON.parse(_data.request.body)
-    _data.response.headers = _data.response.headers ?? JSON.parse(_data.response.headers)
-    _data.response.body = _data.response.body ?? JSON.parse(_data.response.body)
-    return _data
+  __convert(_toJSON: boolean, _data: any): any {
+    let data = JSON.parse(JSON.stringify(_data))
+    if (data.request.headers) data.request.headers = _toJSON ? JSON.parse(data.request.headers) : JSON.stringify(data.request.headers);
+    if (data.request.body) data.request.body = _toJSON ? JSON.parse(data.request.body) : JSON.stringify(data.request.body);
+    if (data.response.headers) data.response.headers = _toJSON ? JSON.parse(data.response.headers) : JSON.stringify(data.response.headers);
+    if (data.response.body) data.response.body = _toJSON ? JSON.parse(data.response.body) : JSON.stringify(data.response.body);
+    return data;
   }
 
   showForm(): void {
@@ -164,7 +127,9 @@ export class TestsComponent implements OnInit {
   selectStep(index: number): void {
     this.createStep = JSON.parse(JSON.stringify(this.createForm.tests[index]));
     this.selectedStepIndex = index;
-    this.createStep = this.__convertJSONToString(this.createStep)
+    console.log(this.createStep)
+    this.createStep = this.__convert(false, this.createStep)
+    console.log(this.createStep)
   }
 
   addStep(): void {
@@ -269,7 +234,10 @@ export class TestsComponent implements OnInit {
 
   saveTest(): void {
     let data = JSON.parse(JSON.stringify(this.createForm))
-    data.tests.map(_test => this.__convertStringToJSON(_test))
+    data.tests.map(_test => this.__convert(true, _test))
+    data.tests.forEach(_test => {
+      console.log(typeof _test.response.headers)
+    });
     if (this.selectedTestID) {
       this.commonService.put('test', `/${this.selectedTestID}`, data)
         .subscribe(
@@ -313,7 +281,7 @@ export class TestsComponent implements OnInit {
       return
     }
     let payload = JSON.parse(JSON.stringify(this.createStep));
-    payload = this.__convertStringToJSON(payload)
+    payload = this.__convert(true, payload)
     this.commonService.post('test', `/run`, payload)
       .subscribe(
         data => {
