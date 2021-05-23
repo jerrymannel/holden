@@ -3,22 +3,20 @@ const Mongoose = require("mongoose")
 
 let definition = {
 	"_id": "String",
-	"request": "Object",
+	"test": "Object",
 	"response": "Object",
-	"resultSumaryID": {
+	"resultID": {
 		"type": "Number",
 		"sparse": true
 	},
-	"stepNo.": {
+	"step": {
 		"type": "Number",
 		"sparse": true
 	},
-	"startDate": "Date",
-	"endDate": "Date",
+	"executionTime": "Date",
 	"status": {
 		"type": "String",
-		"enum": ["PASS", "FAIl", "PENDING"],
-		"default": "PENDING",
+		"enum": ["PASS", "FAIl"],
 		"sparse": true
 	}
 }

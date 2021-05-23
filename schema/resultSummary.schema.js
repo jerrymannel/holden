@@ -4,14 +4,13 @@ const Mongoose = require("mongoose")
 let definition = {
 	"_id": "String",
 	"testId": "String",
-	"startDate": "Date",
-	"endDate": "Date",
-	"tests": "Number",
-	"pass": "Number",
-	"fail": "Number",
+	"executionTime": "Date",
 	"status": {
-		"type": "String",
-		"enum": ["Pending", "Completed"]
+		"step": "Number",
+		"status": {
+			"type": "String",
+			"enum": ["Pending", "Completed"]
+		}
 	}
 }
 
