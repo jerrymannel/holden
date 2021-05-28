@@ -102,8 +102,8 @@ e.flatten = (_object) => {
  * @returns {Object[]}
  */
 e.compareJSON = (_expected, _received) => {
-	const expected = flatten(_expected)
-	const received = flatten(_received)
+	const expected = e.flatten(_expected)
+	const received = e.flatten(_received)
 	const errors = []
 	for (_key in expected) {
 		if (!Object.is(expected[_key], received[_key])) errors.push(`Expected value of "${_key}" doesn't match received value`)

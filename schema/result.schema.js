@@ -18,7 +18,8 @@ let definition = {
 		"type": "String",
 		"enum": ["PASS", "FAIl"],
 		"sparse": true
-	}
+	},
+	"validationErrors": "Object"
 }
 
 module.exports = Mongoose.Schema(definition)

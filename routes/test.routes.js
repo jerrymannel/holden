@@ -4,7 +4,7 @@ const router = express.Router();
 
 const db = require("../lib/db.client")
 const apiClient = require("../lib/api.client")
-const runner = require('../lib/runner')
+const runner = require('../runner/runner')
 
 let logger = global.logger
 
