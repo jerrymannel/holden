@@ -104,3 +104,4 @@ dist
 .tern-port
 
 cleanResults.sh
+test.js
