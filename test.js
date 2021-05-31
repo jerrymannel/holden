@@ -1,18 +1,26 @@
-const { json } = require("express");
-const got = require("got");
-const e = require("./lib/data.validators");
-const validator = require("./lib/data.validators")
+const config = require("./config")
+const log4js = require("log4js")
+log4js.configure(config.logging.options)
+let version = require("./package.json").version
+let logger = log4js.getLogger(`[Holden ${version}]`)
+logger.level = config.logging.loglevel
+global.logger = logger
+
+const db = require('./lib/db.client');
+
+const transformer = require("./runner/transformer")
 
 let data = {
 	"_id": "60a896e2ad16052b2d774054",
 	"name": "Login",
 	"request": {
 		"body": {
-			"password": "thisismysecret",
-			"username": "jerry@appveen.com"
+			"password": "123123123{{",
+			"username": "jerry@appveen.com{{}}"
 		},
 		"headers": {
-			"content-type": "application/json; charset=utf-8"
+			"content-type": "application/json; charset=utf-8",
+			"authorization": "{{step(2).response.headers.token}}"
 		},
 		"method": "POST",
 		"responseCode": 200,
@@ -21,24 +29,12 @@ let data = {
 	"url": "https://staging.appveen.com"
 }
 
-async function init() {
-	try {
-		const options = {
-			url: `${data.url}${data.request.uri}`,
-			method: data.request.method,
-			searchParams: data.request.params,
-			headers: data.request.headers,
-		};
-		if (validator.whatIsThis(data.request.body) == 1 || validator.whatIsThis(data.request.body) == 2) options["json"] = data.request.body
-		else options["body"] = data.request.body
-		console.log(options)
-		// if (_payload.request.body) options['body'] = _payload.request.body;
-		response = await got(options);
-		console.log(response.statusCode)
-		console.log(response.body)
-	} catch (error) {
-		console.log(error)
-	}
+async function init () {
+	await db.init()
+	console.clear();
+	console.log("\n\n\n\n\n")
+	// console.log(process.stdout.getWindowSize())
+	transformer.fillThePlaceholders("1621661226791", data)
+	console.log("\n\n\n\n\n")
 }
-
-init()
+init();

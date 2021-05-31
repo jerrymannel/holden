@@ -12,9 +12,7 @@
     "mongodb": "^3.6.5",
     "mongoose": "^5.12.1",
     "mongoose-express-middleware": "^1.2.0",
-    "progress": "^2.0.3",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6"
+    "progress": "^2.0.3"
   },
   "devDependencies": {
     "eslint": "^7.22.0",
