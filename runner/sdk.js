@@ -19,7 +19,8 @@ const sdk = {}
 sdk.step = async (testID, step, path) => {
 	logger.debug(`SDK :: step() :: ${testID}, ${step}, ${path}`)
 	const data = await db.findOne('data', {_id: {testID, step}})
-	logger.debug(data)
+	logger.debug(`SDK :: step() :: ${data["response"]["data"]["token"]}`)
+	return data[path]
 }
 
 module.exports = { availableFunctionsTypes, sdk}
