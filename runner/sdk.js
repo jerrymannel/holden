@@ -1,4 +1,5 @@
 const db = require("../lib/db.client")
+const validators = require("./validators")
 
 const logger = global.logger
 
@@ -15,10 +16,11 @@ const availableFunctionsTypes = [
 ]
 
 const sdk = {}
+const e = {}
 
-sdk.containsHandlebar = stringData => {
+function containsHandlebar(stringData) {
 	let flag = null;
-	sdk.availableFunctionsTypes.forEach(functionType => {
+	availableFunctionsTypes.forEach(functionType => {
 		if(
 			stringData.indexOf("{{") > -1 &&
 			stringData.indexOf("}}") > -1 &&
@@ -47,4 +49,11 @@ sdk.step = async (testID, step, path) => {
 	return data
 }
 
-module.exports = { availableFunctionsTypes, sdk}
+e.parseAndFill = async (testID, incomingData) => {
+	const typeOfdata = validators.whatIsThis(incomingData)
+	if(typeOfdata > 3) incomingData = incomingData.toString()
+	if(!containsHandlebar(incomingData)) return incomingData
+	return incomingData
+}
+
+module.exports = e
