@@ -20,7 +20,7 @@ let data = {
 		},
 		"headers": {
 			"content-type": "application/json; charset=utf-8",
-			'authorization': "{{step(2).response.headers.token}}"
+			'authorization': "{{step(2).response.data.token}}"
 		},
 		"method": "POST",
 		"responseCode": 200,
@@ -32,7 +32,8 @@ let data = {
 async function init () {
 	await db.init()
 	console.clear();
-	console.log("\n\n\n\n\n")
+	console.log("\n\n\n\n\n *********************************")
+	console.log(data)
 	data = await transformer.fillThePlaceholders("1621661226791", data)
 	console.log(data)
 	console.log("\n\n\n END \n\n\n")
