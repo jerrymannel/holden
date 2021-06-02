@@ -45,10 +45,26 @@ e.transformData = async (testID, data) => {
 
 e.transformPayload = async (testID, payload) => {
 	logger.debug(`${testID} :: Transform payload called`)
+	if (payload.request.uri) payload.request.uri = await e.transformData(testID, payload.request.uri)
+	if (payload.request.params) payload.request.params = await e.transformData(testID, payload.request.params)
 	if (payload.request.headers) payload.request.headers = await e.transformData(testID, payload.request.headers)
-	console.log(payload.request.headers)
 	if (payload.request.data) payload.request.data = await e.transformData(testID, payload.request.data)
+	if (payload.response.headers) payload.response.headers = await e.transformData(testID, payload.response.headers)
+	if (payload.response.data) payload.response.data = await e.transformData(testID, payload.response.data)
 	return payload
+}
+
+e.transformTest = async (testID, test) => {
+	logger.debug(`${testID} :: Transform test called`)
+	// REQUEST
+	if (test.request.uri) test.request.uri = await e.transformData(testID, test.request.uri)
+	if (test.request.params) test.request.params = await e.transformData(testID, test.request.params)
+	if (test.request.headers) test.request.headers = await e.transformData(testID, test.request.headers)
+	if (test.request.data) test.request.data = await e.transformData(testID, test.request.data)
+	// RESPONSE
+	if (test.response.headers) test.response.headers = await e.transformData(testID, test.response.headers)
+	if (test.response.data) test.response.data = await e.transformData(testID, test.response.data)
+	return test
 }
 
 module.exports = e

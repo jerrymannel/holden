@@ -77,6 +77,7 @@ module.exports = async (testID, incomingData) => {
 	logger.trace(`SDK :: parseAndFill() :: Type ${typeOfdata} :: ${incomingData}`)
 	if(typeOfdata > 3) incomingData = incomingData.toString()
 
+	if( !incomingData ) return incomingData
 	if( incomingData.indexOf("{{") == -1 || incomingData.indexOf("}}") == -1 ) return incomingData
 
 	let functionType = await tokenizer(testID, incomingData)

@@ -1,11 +1,12 @@
 const axios = require('axios');
 const db = require("../lib/db.client")
 const compare = require("./validators")
+const transformer = require("./transformer")
 let logger = global.logger
 
 const e = {}
 
-async function makeAPICall(_data) {
+async function makeAPICall(_testID, _data) {
 	const decoratorText = `${_data.resultID} : ${_data.name} : ${_data.step} : ${_data.test.name}`
 	logger.debug(`${decoratorText} :: API :: ${_data.test.request.method} ${_data.test.url}${_data.test.request.uri}`);
 	let response = null;
@@ -28,8 +29,8 @@ async function makeAPICall(_data) {
 
 function runValidations(_data){
 	const decoratorText = `${_data.resultID} : ${_data.name} : ${_data.step} : ${_data.test.name}`
-	let headerValidations = null
-	let bodyValidations = null
+	let headerValidations = []
+	let bodyValidations = []
 	if (_data.test.response.headers) headerValidations = compare.compareJSON(_data.test.response.headers, _data.response.headers)
 	if (_data.test.response.data) bodyValidations = compare.compareJSON(_data.test.response.data, _data.response.data)
 	logger.trace(`${decoratorText} : ${headerValidations.join(", ")}`)
@@ -50,7 +51,7 @@ function runValidations(_data){
 async function updateResult(_data, _response){
 	const decoratorText = `${_data.resultID} : ${_data.name} : ${_data.step} : ${_data.test.name}`
 	if(_response.status < 400 ) {
-		logger.info(`${decoratorText} :: PASS`)
+		logger.info(`${decoratorText} :: Status code matches`)
 		_data['status'] = 'PASS'
 		delete _response.config
 		delete _response.request
@@ -124,7 +125,8 @@ async function runner(_resultID, _testID) {
 			step: _index + 1,
 			test: _test,
 		}
-		let response = await makeAPICall(data)
+		data.test = await transformer.transformTest(_testID, data.test)
+		let response = await makeAPICall(_testID, data)
 		await updateResult(data, response)
 	}, Promise.resolve())
 }

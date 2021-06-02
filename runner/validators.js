@@ -109,7 +109,7 @@ e.compareJSON = (_expected, _received) => {
 		if (!Object.is(expected[_key], received[_key])) errors.push(`Expected value of "${_key}" doesn't match received value`)
 	}
 	if (errors.length > 0) return errors
-	return null;
+	return [];
 }
 
 module.exports = e;
