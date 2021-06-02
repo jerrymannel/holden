@@ -34,7 +34,7 @@ async function fixArray(testID, arrayData) {
 	return data
 }
 
-module.exports = async (testID, data) => {
+e.transformData = async (testID, data) => {
 	logger.debug(`${testID} :: Transform data called`)
 	let typeOfData = validators.whatIsThis(data)
 	if (typeOfData == 1) data = await fixJSON(testID, data)
@@ -42,3 +42,13 @@ module.exports = async (testID, data) => {
 	else return await sdk(testID, data)
 	return data
 }
+
+e.transformPayload = async (testID, payload) => {
+	logger.debug(`${testID} :: Transform payload called`)
+	if (payload.request.headers) payload.request.headers = await e.transformData(testID, payload.request.headers)
+	console.log(payload.request.headers)
+	if (payload.request.data) payload.request.data = await e.transformData(testID, payload.request.data)
+	return payload
+}
+
+module.exports = e

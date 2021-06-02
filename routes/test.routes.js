@@ -4,6 +4,7 @@ const router = express.Router();
 
 const db = require("../lib/db.client")
 const apiClient = require("../lib/api.client")
+const transformer = require('../runner/transformer')
 const runner = require('../runner/runner')
 
 let logger = global.logger
@@ -25,8 +26,10 @@ router.put("/:id", testsCrud.update)
 router.delete("/:id", testsCrud.destroy)
 
 //  runs a steps and gets the output
-router.post("/run", (_req, _res) => {
+router.post("/run/:testId", async (_req, _res) => {
+	const testId = _req.params.testId
 	let body = _req.body;
+	body = await transformer.transformPayload(testId, body)
 	apiClient.callExternalAPI(body)
 		.then(_d => {
 			delete _d.config

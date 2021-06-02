@@ -149,7 +149,7 @@
 							</div>
 							<div class="d-flex flex-row" *ngIf="requestTab == 2">
 								<textarea type="text" class="form-control form-control-sm border-top-0"
-									[(ngModel)]="createForm.tests[selectedStepIndex].request.body" rows="8"></textarea>
+									[(ngModel)]="createForm.tests[selectedStepIndex].request.data" rows="8"></textarea>
 							</div>
 						</div>
 					</div>
@@ -180,7 +180,7 @@
 							</div>
 							<div class="d-flex flex-row" *ngIf="responseTab == 2">
 								<textarea type="text" class="form-control form-control-sm border-top-0"
-									[(ngModel)]="createForm.tests[selectedStepIndex].response.body" rows="8"></textarea>
+									[(ngModel)]="createForm.tests[selectedStepIndex].response.data" rows="8"></textarea>
 							</div>
 						</div>
 					</div>

@@ -14,7 +14,7 @@ async function makeAPICall(_data) {
 		method: _data.test.request.method,
 		params: _data.test.request.params,
 		headers: _data.test.request.headers,
-		data: _data.test.request.body,
+		data: _data.test.request.data,
 		timeout: 1000,
 		validateStatus: () => true
 	};
@@ -31,7 +31,7 @@ function runValidations(_data){
 	let headerValidations = null
 	let bodyValidations = null
 	if (_data.test.response.headers) headerValidations = compare.compareJSON(_data.test.response.headers, _data.response.headers)
-	if (_data.test.response.body) bodyValidations = compare.compareJSON(_data.test.response.body, _data.response.data)
+	if (_data.test.response.data) bodyValidations = compare.compareJSON(_data.test.response.data, _data.response.data)
 	logger.trace(`${decoratorText} : ${headerValidations.join(", ")}`)
 	logger.trace(`${decoratorText} : ${bodyValidations.join(",")}`)
 	if(headerValidations.length > 0 ) {

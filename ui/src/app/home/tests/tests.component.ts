@@ -89,9 +89,9 @@ export class TestsComponent implements OnInit {
   __convert(_toJSON: boolean, _data: any): any {
     let data = JSON.parse(JSON.stringify(_data))
     if (data.request.headers) data.request.headers = _toJSON ? JSON.parse(data.request.headers) : JSON.stringify(data.request.headers, null, ' ');
-    if (data.request.body) data.request.body = _toJSON ? JSON.parse(data.request.body) : JSON.stringify(data.request.body, null, ' ');
+    if (data.request.data) data.request.data = _toJSON ? JSON.parse(data.request.data) : JSON.stringify(data.request.data, null, ' ');
     if (data.response.headers) data.response.headers = _toJSON ? JSON.parse(data.response.headers) : JSON.stringify(data.response.headers, null, ' ');
-    if (data.response.body) data.response.body = _toJSON ? JSON.parse(data.response.body) : JSON.stringify(data.response.body, null, ' ');
+    if (data.response.data) data.response.data = _toJSON ? JSON.parse(data.response.data) : JSON.stringify(data.response.data, null, ' ');
     return data;
   }
 
@@ -138,12 +138,12 @@ export class TestsComponent implements OnInit {
         method: 'GET',
         uri: null,
         headers: null,
-        body: null,
+        data: null,
         responseCode: 200
       },
       response: {
         headers: null,
-        body: null,
+        data: null,
       }
     });
     this.selectStep(this.createForm.tests.length - 1);
@@ -274,11 +274,11 @@ export class TestsComponent implements OnInit {
     }
     let payload = JSON.parse(JSON.stringify(this.createForm.tests[stepId]));
     payload = this.__convert(true, payload)
-    this.commonService.post('test', `/run`, payload)
+    this.commonService.post('test', `/run/${this.createForm._id}`, payload)
       .subscribe(
         data => {
           this.createForm.tests[stepId].response.headers = JSON.stringify(data.headers, null, '  ');
-          this.createForm.tests[stepId].response.body = JSON.stringify(data.data, null, '  ');
+          this.createForm.tests[stepId].response.data = JSON.stringify(data.data, null, '  ');
           this.createForm.tests[stepId].request.responseCode = data.status;
         },
         err => console.log(err)
