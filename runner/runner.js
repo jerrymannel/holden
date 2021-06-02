@@ -16,7 +16,7 @@ async function makeAPICall(_testID, _data) {
 		params: _data.test.request.params,
 		headers: _data.test.request.headers,
 		data: _data.test.request.data,
-		timeout: 1000,
+		timeout: 10000,
 		validateStatus: () => true
 	};
 	try {

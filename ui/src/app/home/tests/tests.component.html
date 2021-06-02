@@ -30,7 +30,7 @@
 			<div class="input-group">
 				<input type="text" class="form-control w-75" [(ngModel)]="createForm.name"
 					[ngClass]="{'is-invalid': !createForm.name}">
-				<button class="btn btn-outline-primary btn-sm" (click)="saveTest()" [disabled]="validateForm()"><i
+				<button class="btn btn-outline-primary btn-sm" (click)="runTest()" [disabled]="validateForm()"><i
 						class="bi bi-lightning-fill"></i>
 					Run</button>
 				<button class="btn btn-outline-dark btn-sm" (click)="showDeleteConfirmation = true;"><i

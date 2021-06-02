@@ -285,4 +285,16 @@ export class TestsComponent implements OnInit {
       )
   }
 
+  runTest(): void {
+    if (!this.createForm._id) {
+      alert("Please save the test before running")
+      return
+    }
+    this.commonService.post('test', `/runTest/${this.createForm._id}`, {})
+      .subscribe(
+        data => console.log(data),
+        err => console.log(err)
+      )
+  }
+
 }

@@ -68,7 +68,7 @@ sdk.test = async (testID, inputString) => {
 	logger.debug(`${testID} :: SDK :: test() :: ${outgoingTestID}, ${step}, ${path}`)
 	let data = await db.findOne('data', {_id: {outgoingTestID, step}})
 	data = findData(path, data)
-	logger.trace(`${testID} :: SDK :: test() :: ${data}`)
+	logger.debug(`${testID} :: SDK :: test() :: ${data}`)
 	return data
 }
 
