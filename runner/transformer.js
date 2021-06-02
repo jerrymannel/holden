@@ -34,11 +34,11 @@ async function fixArray(testID, arrayData) {
 	return data
 }
 
-e.fillThePlaceholders = async (testID, data) => {
+module.exports = async (testID, data) => {
+	logger.debug(`${testID} :: Transform data called`)
 	let typeOfData = validators.whatIsThis(data)
 	if (typeOfData == 1) data = await fixJSON(testID, data)
 	else if (typeOfData == 2) data = await fixArray(testID, data)
 	else return await sdk.parseAndFill(testID, data)
+	return data
 }
-
-module.exports = e

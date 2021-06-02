@@ -20,9 +20,11 @@ let data = {
 		},
 		"headers": {
 			"content-type": "application/json; charset=utf-8",
-			'authorization': "{{step(2).response.data.token}}"
+			'authorization': "JWT {{step(2).response.data.token}}",
+			'username': "USERNAME {{step(2).response.data.username}}",
 		},
 		"method": "POST",
+		"concat": "{{step(2).response.status}} - {{step(2).response.statusText}}",
 		"responseCode": 200,
 		"uri": "/api/a/rbac/login"
 	},
@@ -33,8 +35,8 @@ async function init () {
 	await db.init()
 	console.clear();
 	console.log("\n\n\n\n\n *********************************")
-	console.log(data)
-	data = await transformer.fillThePlaceholders("1621661226791", data)
+	// console.log(data)
+	data = await transformer("1621661226791", data)
 	console.log(data)
 	console.log("\n\n\n END \n\n\n")
 }
