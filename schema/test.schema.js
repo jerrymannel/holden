@@ -20,12 +20,12 @@ let definition = {
 				},
 				"uri": "String",
 				"headers": "Object",
-				"body": "Object",
+				"data": "Object",
 				"responseCode": "Number"
 			},
 			"response": {
 				"headers": "Object",
-				"body": "Object",
+				"data": "Object",
 			}
 		}
 	]

@@ -14,11 +14,11 @@ const availableFunctionsTypes = [
 const sdk = {}
 const e = {}
 
-async function tokenizer(data) {
+async function tokenizer(testID, data) {
 	let tokenizedData = {}
-	logger.debug(`SDK :: tokenizer :: ${data}`)
+	logger.debug(`${testID} :: SDK :: tokenizer() :: ${data}`)
 	let firstSplit = data.split("{{")
-	console.log(firstSplit)
+	// console.log(firstSplit)
 	let finalString = ""
 	await firstSplit.reduce(async (previous, token) => {
 		if(token.indexOf("}}") == -1 ) {
@@ -28,19 +28,12 @@ async function tokenizer(data) {
 		let subTokens = token.split("}}")
 		// console.log("subTokens ->", subTokens)
 		let functionType = availableFunctionsTypes.find(fnType => subTokens[0].startsWith(fnType))
-		subTokens[0] = functionType
+		logger.debug(`${testID} :: SDK :: tokenizer() :: type - ${functionType}`)
+		if (functionType) subTokens[0] = await sdk[functionType](testID, subTokens[0])
 		finalString += subTokens.join("")
 	}, '')
-	console.log(`finalString :: ${finalString}`)
 	return finalString
 }
-
-async function containsHandlebar(stringData) {
-	if( stringData.indexOf("{{") == -1 || stringData.indexOf("}}") == -1 ) return null
-	let functionType = await tokenizer(stringData)
-	if(!functionType) return null
-	return functionType
-};
 
 function findData(path, json) {
 	path.split(".").forEach(pathToken => {
@@ -50,27 +43,45 @@ function findData(path, json) {
 	return json
 }
 
-sdk.step = async (testID, step) => {
-	let path = null
-	logger.debug(`SDK :: step() :: ${testID}, ${step}, ${path}`)
+sdk.step = async (testID, inputString) => {
+	const tokenizedString = inputString.split(".")
+	const step = parseInt(tokenizedString[0].split("(")[1].split(")")[0])
+	tokenizedString.splice(0, 1)
+	const path = tokenizedString.join(".")
+	logger.debug(`${testID} :: SDK :: step() :: ${step}, ${path}`)
 	let data = await db.findOne('data', {_id: {testID, step}})
 	data = findData(path, data)
-	logger.trace(`SDK :: step() :: ${data}`)
+	logger.trace(`${testID} :: SDK :: step() :: ${data}`)
 	return data
 }
 
-e.parseAndFill = async (testID, incomingData) => {
+sdk.test = async (testID, inputString) => {
+	const tokenizedString = inputString.split(".")
+	const test = tokenizedString[0].split("(")[1].split(")")[0].replace(/'/ig,"")
+	tokenizedString.splice(0, 1)
+	const step = parseInt(tokenizedString[0].split("(")[1].split(")")[0])
+	tokenizedString.splice(0, 1)
+	const path = tokenizedString.join(".")
+	logger.debug(`${testID} :: SDK :: test() :: ${test}, ${step}, ${path}`)
+	let outgoingTestID = await db.findOne('tests', {name: test})
+	outgoingTestID = outgoingTestID._id
+	logger.debug(`${testID} :: SDK :: test() :: ${outgoingTestID}, ${step}, ${path}`)
+	let data = await db.findOne('data', {_id: {outgoingTestID, step}})
+	data = findData(path, data)
+	logger.trace(`${testID} :: SDK :: test() :: ${data}`)
+	return data
+}
+
+module.exports = async (testID, incomingData) => {
 	const typeOfdata = validators.whatIsThis(incomingData)
 	logger.trace(`SDK :: parseAndFill() :: Type ${typeOfdata} :: ${incomingData}`)
 	if(typeOfdata > 3) incomingData = incomingData.toString()
-	
-	let functionType = await containsHandlebar(incomingData)
-	
+
+	if( incomingData.indexOf("{{") == -1 || incomingData.indexOf("}}") == -1 ) return incomingData
+
+	let functionType = await tokenizer(testID, incomingData)
 	if(!functionType) return incomingData
 	
-	logger.debug(`SDK :: parseAndFill() :: function ${JSON.stringify(functionType)}`)
-	// let data = await sdk[functionType](testID, incomingData)
+	logger.trace(`SDK :: parsed response :: ${JSON.stringify(functionType)}`)
 	return functionType
 }
-
-module.exports = e

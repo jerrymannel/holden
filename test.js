@@ -28,16 +28,20 @@ let data = {
 		"responseCode": 200,
 		"uri": "/api/a/rbac/login"
 	},
+	"array": [
+	"{{test('Login Test').step(1).response.data.fqdn}}",
+	"{{test('Login Test').step(1).response.headers.host}}"
+	],
 	"url": "https://staging.appveen.com"
 }
 
 async function init () {
 	await db.init()
 	console.clear();
-	console.log("\n\n\n\n\n *********************************")
+	console.log("\n\n *********************************")
 	// console.log(data)
 	data = await transformer("1621661226791", data)
 	console.log(data)
-	console.log("\n\n\n END \n\n\n")
+	console.log("\n\n\n END")
 }
 init();
