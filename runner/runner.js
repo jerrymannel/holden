@@ -111,6 +111,7 @@ async function generateSummary(_resultID, _testID) {
 	summary.status.sort((prev, curr) => prev.step - curr.step)
 	logger.trace(`${_resultID} :: Summary :: ${JSON.stringify(summary)}`)
 	await db.insertDocument('resultsummaries', summary)
+	return summary
 }
 
 async function runner(_resultID, _testID) {
@@ -136,8 +137,8 @@ e.run = async (_testID) => {
 	const resultID = Date.now()
 	logger.info(`Generated runID ${resultID} for running test ${_testID}`)
 	await runner(resultID, _testID)
-	await generateSummary(resultID, _testID)
-	return { resultID }
+	const result = await generateSummary(resultID, _testID)
+	return result
 };
 
 module.exports = e
