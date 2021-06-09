@@ -32,6 +32,8 @@ export class TestsComponent implements OnInit {
   requestTab = 1;
   responseTab = 1;
 
+  result: any;
+
   errors = {
     createUpdate: null,
     fetch: null,
@@ -292,7 +294,7 @@ export class TestsComponent implements OnInit {
     }
     this.commonService.post('test', `/runTest/${this.createForm._id}`, {})
       .subscribe(
-        data => console.log(data),
+        data => this.result = data,
         err => console.log(err)
       )
   }
