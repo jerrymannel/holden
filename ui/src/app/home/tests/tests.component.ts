@@ -32,7 +32,8 @@ export class TestsComponent implements OnInit {
   requestTab = 1;
   responseTab = 1;
 
-  result: any;
+  resultSummary: any;
+  results: any
 
   errors = {
     createUpdate: null,
@@ -294,9 +295,30 @@ export class TestsComponent implements OnInit {
     }
     this.commonService.post('test', `/runTest/${this.createForm._id}`, {})
       .subscribe(
-        data => this.result = data,
+        data => {
+          this.resultSummary = data;
+          this.fetchResults(data._id)
+        },
         err => console.log(err)
       )
+  }
+
+  fetchResults(runID: string): void {
+    let options = {
+      filter: { "_id.resultID": 1623308208830, status: "FAIL" },
+      select: "step,validationErrors",
+      limit: -1
+    }
+    this.commonService.get('result', `/`, options)
+      .subscribe(
+        data => this.results = data,
+        err => console.log(err)
+      )
+  }
+
+  stepHasErrorFromRun(index: number): any {
+    let filteredData = this.results?.filter(result => result.step == index + 1)
+    return filteredData ? filteredData : []
   }
 
 }

@@ -95,7 +95,7 @@ async function generateSummary(_resultID, _testID) {
 		}, {
 			$group: {
   			_id: "$_id.resultID",
-  			status: { $addToSet: { step: "$step", status: "$status" }
+  			stepStatus: { $addToSet: { step: "$step", status: "$status" }
   		}
 		}
 	}]
@@ -108,7 +108,9 @@ async function generateSummary(_resultID, _testID) {
 	const summary = summaryResult[0]
 	summary["testID"] = _testID
 	summary["executionTime"] = new Date()
-	summary.status.sort((prev, curr) => prev.step - curr.step)
+	summary.stepStatus.sort((prev, curr) => prev.step - curr.step)
+	summary["status"] = "PASS"
+	summary.stepStatus.forEach(_step => summary.status = _step.status == "PASS"? summary.status : "FAIL")
 	logger.trace(`${_resultID} :: Summary :: ${JSON.stringify(summary)}`)
 	await db.insertDocument('resultsummaries', summary)
 	return summary

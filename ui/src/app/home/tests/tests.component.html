@@ -72,8 +72,13 @@
 			<div class=" d-flex flex-row gap-1 mt-2">
 				<!-- left sidebad -->
 				<div class="d-flex flex-column">
-					<span class="text-primary text-center my-2" *ngIf=" result?._id"><small>Test run id
-							{{result._id}}</small></span>
+					<span class="text-center my-2" *ngIf=" resultSummary?._id">
+						<small>
+							Test run {{resultSummary._id}}:
+							<span
+								[ngClass]="{'text-danger': resultSummary.status == 'FAIL', 'text-success': resultSummary.status == 'PASS'}">{{resultSummary.status}}</span>
+						</small>
+					</span>
 					<ul class="list-group" style="width: 15rem;">
 						<li class="list-group-item fakeLink p-1 fs-6" *ngFor="let step of createForm.tests; let i = index"
 							(click)="selectStep(i)" [ngClass]="{'selected': i === selectedStepIndex}">
@@ -86,9 +91,9 @@
 								<i class="bi bi-arrow-up-square fakeLink float-end mx-1" (click)="reorder(-1, i)"
 									[ngClass]="{'text-muted': i == 0}"></i>
 								<span class="float-end text-danger" *ngIf="stepErrors[i]"> <i class="bi bi-exclamation"></i> </span>
-								<span class="float-end text-danger" *ngIf="result?.status[i].status == 'FAIL'"> <i
+								<span class="float-end text-danger" *ngIf="resultSummary?.stepStatus[i].status == 'FAIL'"> <i
 										class="bi bi-hand-thumbs-down"></i></span>
-								<span class="float-end text-success" *ngIf="result?.status[i].status == 'PASS'"> <i
+								<span class="float-end text-success" *ngIf="resultSummary?.stepStatus[i].status == 'PASS'"> <i
 										class="bi bi-hand-thumbs-up"></i></span>
 							</span>
 						</li>
@@ -110,8 +115,8 @@
 					<small class="d-flex flex-row text-danger" *ngIf="stepErrors[selectedStepIndex]">Error:
 						{{stepErrors[selectedStepIndex]}}</small>
 
-					<div class="d-flex flex-column mt-3">
-						<span style="width: 10rem;" class="text-danger"><strong>Error</strong></span>
+					<div class="d-flex flex-column mt-3" *ngIf="stepHasErrorFromRun(selectedStepIndex).length > 0">
+						<span style="width: 10rem;" class="text-danger">Error(s)</span>
 						<ul>
 							<li></li>
 						</ul>
