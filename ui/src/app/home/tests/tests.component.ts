@@ -133,6 +133,8 @@ export class TestsComponent implements OnInit {
 
   selectStep(index: number): void {
     this.selectedStepIndex = index;
+    this.responseTab = 1;
+    this.requestTab = 1;
   }
 
   addStep(): void {

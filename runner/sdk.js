@@ -75,12 +75,13 @@ sdk.test = async (testID, inputString) => {
 module.exports = async (testID, incomingData) => {
 	const typeOfdata = validators.whatIsThis(incomingData)
 	logger.trace(`SDK :: parseAndFill() :: Type ${typeOfdata} :: ${incomingData}`)
-	if(typeOfdata > 3) incomingData = incomingData.toString()
+	let stringifiedInputData = incomingData
+	if(typeOfdata > 3) stringifiedInputData = stringifiedInputData.toString()
 
-	if( !incomingData ) return incomingData
-	if( incomingData.indexOf("{{") == -1 || incomingData.indexOf("}}") == -1 ) return incomingData
+	if( !stringifiedInputData ) return incomingData
+	if( stringifiedInputData.indexOf("{{") == -1 || stringifiedInputData.indexOf("}}") == -1 ) return incomingData
 
-	let functionType = await tokenizer(testID, incomingData)
+	let functionType = await tokenizer(testID, stringifiedInputData)
 	if(!functionType) return incomingData
 	
 	logger.trace(`SDK :: parsed response :: ${JSON.stringify(functionType)}`)
