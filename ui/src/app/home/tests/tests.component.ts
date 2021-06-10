@@ -33,7 +33,8 @@ export class TestsComponent implements OnInit {
   responseTab = 1;
 
   resultSummary: any;
-  results: any
+  results: any;
+  resultErrors: any;
 
   errors = {
     createUpdate: null,
@@ -308,17 +309,18 @@ export class TestsComponent implements OnInit {
       filter: { "_id.resultID": 1623308208830, status: "FAIL" },
       select: "step,validationErrors",
       limit: -1
-    }
+    };
     this.commonService.get('result', `/`, options)
       .subscribe(
         data => this.results = data,
         err => console.log(err)
-      )
+      );
   }
 
   stepHasErrorFromRun(index: number): any {
-    let filteredData = this.results?.filter(result => result.step == index + 1)
-    return filteredData ? filteredData : []
+    let filteredData = this.results?.filter(result => result.step == index + 1);
+    this.resultErrors = filteredData ? filteredData[0] : null;
+    return filteredData ? filteredData : [];
   }
 
 }
