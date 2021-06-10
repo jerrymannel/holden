@@ -116,9 +116,15 @@
 						{{stepErrors[selectedStepIndex]}}</small>
 
 					<div class="d-flex flex-column mt-3" *ngIf="stepHasErrorFromRun(selectedStepIndex).length > 0">
-						<span style="width: 10rem;" class="text-danger">Error(s)</span>
-						<ul>
-							<li></li>
+						<span style="width: 10rem;" class="text-danger fs-6" *ngIf="resultErrors.validationErrors.headers">Header
+							error(s)</span>
+						<ul class="fs-6">
+							<li *ngFor="let headerError of resultErrors.validationErrors.headers" class="fs-6">{{headerError}}</li>
+						</ul>
+						<span style="width: 10rem;" class="text-danger fs-6" *ngIf="resultErrors.validationErrors.body">Body
+							error(s)</span>
+						<ul class="fs-6">
+							<li *ngFor="let bodyError of resultErrors.validationErrors.body" class="fs-6">{{bodyError}}</li>
 						</ul>
 					</div>
 

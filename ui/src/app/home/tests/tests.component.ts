@@ -108,6 +108,9 @@ export class TestsComponent implements OnInit {
   }
 
   selectTest(testID: string): void {
+    this.resultSummary = null;
+    this.results = null;
+    this.resultErrors = null;
     this.showEditCreateModal = false;
     this.commonService.get('test', `/${testID}`, null)
       .subscribe(
@@ -294,6 +297,8 @@ export class TestsComponent implements OnInit {
       alert("Please save the test before running")
       return
     }
+    this.results = null;
+    this.resultErrors = null;
     this.commonService.post('test', `/runTest/${this.createForm._id}`, {})
       .subscribe(
         data => {
@@ -306,7 +311,7 @@ export class TestsComponent implements OnInit {
 
   fetchResults(runID: string): void {
     let options = {
-      filter: { "_id.resultID": 1623308208830, status: "FAIL" },
+      filter: { "_id.resultID": runID, status: "FAIL" },
       select: "step,validationErrors",
       limit: -1
     };
