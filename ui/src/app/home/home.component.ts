@@ -9,7 +9,7 @@ import { CommonService } from '../utils/common.service';
 })
 export class HomeComponent implements OnInit {
 
-  menuItem = 'tests';
+  menuItem = 'runs';
   version = '1.0.0';
   user: string;
 
@@ -23,15 +23,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.commonservice.get('version', '', null)
-    .subscribe(
-      version => this.version = version.version,
-      err => console.error(err)
-    );
+      .subscribe(
+        version => this.version = version.version,
+        err => console.error(err)
+      );
   }
 
   menuClick(menu: string) {
     this.menuItem = menu;
-    this.router.navigate([menu], {relativeTo: this.route});
+    this.router.navigate([menu], { relativeTo: this.route });
   }
 
   logout(): void {

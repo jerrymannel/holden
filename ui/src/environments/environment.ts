@@ -8,5 +8,6 @@ export const environment = {
     function: '/api/function',
     testbucket: '/api/testbucket',
     result: '/api/result',
+    resultsummary: '/api/resultsummary'
   }
 };

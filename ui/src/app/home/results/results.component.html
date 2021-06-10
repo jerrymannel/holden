@@ -26,9 +26,31 @@
 		</div>
 
 		<div class="col-10">
-			<div class="card">
-				<div class="card-header"></div>
-				<div class="card-body"></div>
+			<div class="d-flex flex-column">
+				<div class="card px-2 pt-2">
+					<h5>
+						<strong>{{selectedTest?.name}}</strong><span class="smallFont">&nbsp;&nbsp;({{selectedTest?._id}})</span>
+						<button class="btn btn-success btn-sm buttonwidth float-end">Run</button>
+					</h5>
+				</div>
+
+				<div class="d-flex flex-row pt-2">
+
+					<div class="d-flex flex-column" style="width: 12rem;">
+						<div class="list-group">
+							<div class="list-group-item" *ngFor="let summary of resultSummary">
+								<div>
+									{{summary._id}}
+									<span class="float-end"
+										[ngClass]="{'text-danger': summary.status == 'FAIL', 'text-success': summary.status == 'PASS'}"><i
+											class="bi bi-flag-fill"></i></span>
+								</div>
+								<span class="smallFont text-secondary">{{summary.executionTime | date:'medium'}}</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
 

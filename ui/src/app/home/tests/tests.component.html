@@ -29,7 +29,7 @@
 		<div class="col-10 border p-2 test">
 			<div class="input-group">
 				<input type="text" class="form-control w-75" [(ngModel)]="createForm.name"
-					[ngClass]="{'is-invalid': !createForm.name}">
+					[ngClass]="{'is-invalid': !createForm?.name}">
 				<button class="btn btn-outline-primary btn-sm" (click)="runTest()" [disabled]="validateForm()"><i
 						class="bi bi-lightning-fill"></i>
 					Run</button>
@@ -131,8 +131,6 @@
 					<div class="d-flex flex-column mt-3">
 						<div class="mb-2">
 							<span style="width: 10rem;"><strong>Request</strong></span>
-							<button *ngIf="showEditCreateModal"
-								class="btn btn-sm btn-outline-secondary ms-4 buttonwidth float-end">GO</button>
 						</div>
 						<div class="d-flex flex-column border-top">
 							<div class=" d-flex flex-row mt-2">

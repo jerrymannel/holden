@@ -9,9 +9,11 @@ import { CommonService } from '../../utils/common.service';
 })
 export class ResultsComponent implements OnInit {
 
-  tests: [];
+  tests = [];
   selectedTestID = null;
   selectedTest = null;
+
+  resultSummary = []
 
   errorTest = null
 
@@ -46,8 +48,25 @@ export class ResultsComponent implements OnInit {
     this.selectedTestID = testID;
     this.commonService.get('test', `/${testID}`, null)
       .subscribe(
-        test => this.selectedTest = test,
+        test => {
+          this.selectedTest = test;
+          this.findAllResultSummary(test._id)
+        },
         () => this.errorTest = 'Error fetching details of ' + testID
+      );
+  }
+
+  findAllResultSummary(_testID: string): void {
+    this.resultSummary = []
+    let options = {
+      filter: {
+        testID: _testID
+      }
+    }
+    this.commonService.get('resultsummary', `/`, options)
+      .subscribe(
+        summary => this.resultSummary = summary,
+        () => this.errorTest = 'Error fetching result summaries for test '
       );
   }
 

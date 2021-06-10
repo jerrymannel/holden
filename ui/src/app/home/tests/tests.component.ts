@@ -58,7 +58,7 @@ export class TestsComponent implements OnInit {
     this.selectedUrlIndex = null;
     this.createForm = {
       _id: null,
-      name: null,
+      name: "",
       urls: [],
       tests: []
     };
@@ -112,6 +112,8 @@ export class TestsComponent implements OnInit {
     this.results = null;
     this.resultErrors = null;
     this.showEditCreateModal = false;
+    this.__resetForm();
+    this.selectedStepIndex = 0;
     this.commonService.get('test', `/${testID}`, null)
       .subscribe(
         test => {
