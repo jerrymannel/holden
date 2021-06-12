@@ -11,9 +11,13 @@ export class ResultsComponent implements OnInit {
 
   tests = [];
   selectedTestID = null;
+  selectedResultID = null;
   selectedTest = null;
 
-  resultSummary = []
+  listOfResultSummary = [];
+  resultSummary: any;
+  results = [];
+  selectedResultIndex = 0;
 
   errorTest = null
 
@@ -57,7 +61,7 @@ export class ResultsComponent implements OnInit {
   }
 
   findAllResultSummary(_testID: string): void {
-    this.resultSummary = []
+    this.listOfResultSummary = []
     let options = {
       filter: {
         testID: _testID
@@ -65,8 +69,33 @@ export class ResultsComponent implements OnInit {
     }
     this.commonService.get('resultsummary', `/`, options)
       .subscribe(
-        summary => this.resultSummary = summary,
+        summary => {
+          this.listOfResultSummary = summary;
+          if (this.listOfResultSummary.length > 0) {
+            this.selectedResultID = this.listOfResultSummary[0]._id
+            this.fetchResult(this.selectedResultID)
+          }
+        },
         () => this.errorTest = 'Error fetching result summaries for test '
+      );
+  }
+
+  fetchResult(resultID: number): void {
+    this.results = [];
+    this.selectedResultID = resultID;
+    this.listOfResultSummary.forEach(summary => {
+      if (summary._id == resultID) this.resultSummary = summary
+    })
+    let options = {
+      filter: {
+        "_id.resultID": resultID
+      }
+    }
+    this.selectedResultIndex = 0;
+    this.commonService.get('result', `/`, options)
+      .subscribe(
+        results => this.results = results,
+        () => this.errorTest = 'Error fetching results for test '
       );
   }
 

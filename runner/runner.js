@@ -136,7 +136,7 @@ async function runner(_resultID, _testID) {
 
 
 e.run = async (_testID) => {
-	const resultID = Date.now()
+	const resultID = Date.now().toString()
 	logger.info(`Generated runID ${resultID} for running test ${_testID}`)
 	await runner(resultID, _testID)
 	const result = await generateSummary(resultID, _testID)

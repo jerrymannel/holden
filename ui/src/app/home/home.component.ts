@@ -9,7 +9,7 @@ import { CommonService } from '../utils/common.service';
 })
 export class HomeComponent implements OnInit {
 
-  menuItem = 'runs';
+  menuItem = 'tests';
   version = '1.0.0';
   user: string;
 
