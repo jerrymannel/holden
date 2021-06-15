@@ -41,7 +41,7 @@
 							{{summary._id}}
 							<span class="float-end"
 								[ngClass]="{'text-danger': summary.status == 'FAIL', 'text-success': summary.status == 'PASS'}"><i
-									class="bi bi-flag-fill"></i></span>
+									class="bi bi-circle-fill"></i></span>
 							<div class="smallFont text-secondary">{{summary.executionTime | date:'short'}}</div>
 						</div>
 					</div>
@@ -58,11 +58,81 @@
 						<div class="list-group" style="width: 15rem;">
 							<div class="list-group-item fakeLink" *ngFor="let result of results; let i = index"
 								[ngClass]="{'selected': selectedResultIndex == i}" (click)="selectedResultIndex = i">
-								<span>{{results[i].test.name}} {{results[i].status}}</span>
+								<span>{{results[i].test.name}}</span>
+								<span class="float-end" [ngClass]=" {'text-danger': results[i].status=='FAIL' , 'text-success' : results[i].status=='PASS'
+									}"><i class="bi bi-circle-fill"></i></span>
 							</div>
 						</div>
 
-						<div class="card ms-2">
+						<div class="card px-2 pt-2 ms-2 w-75" *ngIf="results[selectedResultIndex]">
+							<div class="border-bottom">
+								<span>Step: <strong>{{results[selectedResultIndex].test.name}}</strong></span>
+								<span class="float-end">Status: <strong [ngClass]="{'text-danger': results[selectedResultIndex].status=='FAIL' , 'text-success' : results[selectedResultIndex].status=='PASS'
+								}">{{results[selectedResultIndex].status}}</strong></span>
+							</div>
+
+							<div class="p-2" *ngIf="results[selectedResultIndex].status == 'FAIL'">
+								<span style="width: 10rem;" class="text-danger fs-6"
+									*ngIf="results[selectedResultIndex].validationErrors.headers">Header
+									error(s)</span>
+								<ul class="fs-6">
+									<li *ngFor="let headerError of results[selectedResultIndex].validationErrors.headers" class="fs-6">
+										{{headerError}}</li>
+								</ul>
+								<span style="width: 10rem;" class="text-danger fs-6"
+									*ngIf="results[selectedResultIndex].validationErrors.body">Body
+									error(s)</span>
+								<ul class="fs-6">
+									<li *ngFor="let bodyError of results[selectedResultIndex].validationErrors.body" class="fs-6">
+										{{bodyError}}</li>
+								</ul>
+							</div>
+
+							<div class="d-flex flex-column">
+								<div class="p-1 m-1">
+									<strong>Request</strong>
+									<ul class="nav nav-tabs">
+										<li class="nav-item">
+											<span class="nav-link fakeLink" (click)="requestTab = 1"
+												[ngClass]="{'active': requestTab == 1}">Header</span>
+										</li>
+										<li class=" nav-item">
+											<span class="nav-link fakeLink" (click)="requestTab = 2"
+												[ngClass]="{'active': requestTab == 2}">Body</span>
+										</li>
+									</ul>
+									<div class="d-flex flex-column">
+										<pre class="d-flex flex-row" *ngIf="requestTab == 1">
+											{{results[selectedResultIndex].test.request.headers | json}}
+										</pre>
+										<pre class="d-flex flex-row" *ngIf="requestTab == 2">
+											{{results[selectedResultIndex].test.request.data | json}}
+										</pre>
+									</div>
+								</div>
+
+								<div class="p-1 m-1">
+									<strong>Response</strong>
+									<ul class="nav nav-tabs">
+										<li class="nav-item">
+											<span class="nav-link fakeLink" (click)="responseTab = 1"
+												[ngClass]="{'active': responseTab == 1}">Header</span>
+										</li>
+										<li class=" nav-item">
+											<span class="nav-link fakeLink" (click)="responseTab = 2"
+												[ngClass]="{'active': responseTab == 2}">Body</span>
+										</li>
+									</ul>
+									<div class="d-flex flex-column">
+										<pre class="d-flex flex-row" *ngIf="responseTab == 1">
+											{{results[selectedResultIndex].response.headers | json}}
+										</pre>
+										<pre class="d-flex flex-row" *ngIf="responseTab == 2">
+											{{results[selectedResultIndex].response.data | json}}
+										</pre>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

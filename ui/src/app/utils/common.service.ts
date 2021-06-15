@@ -122,12 +122,12 @@ export class CommonService {
       parent += '.';
     }
     definition.forEach(i => {
-        if (i.type === 'Object') {
-            const keys = this.generateAttributeSet(`${parent}${i.key}`, i.definition);
-            temp = temp.concat(keys);
-        } else {
-            temp.push([`${parent}${i.key}`, i.type]);
-        }
+      if (i.type === 'Object') {
+        const keys = this.generateAttributeSet(`${parent}${i.key}`, i.definition);
+        temp = temp.concat(keys);
+      } else {
+        temp.push([`${parent}${i.key}`, i.type]);
+      }
     });
     return temp;
   }

@@ -21,6 +21,9 @@ export class ResultsComponent implements OnInit {
 
   errorTest = null
 
+  requestTab = 1;
+  responseTab = 1;
+
 
   constructor(
     private commonService: CommonService,
@@ -97,6 +100,10 @@ export class ResultsComponent implements OnInit {
         results => this.results = results,
         () => this.errorTest = 'Error fetching results for test '
       );
+  }
+
+  stringify(data: any): string {
+    return JSON.stringify(data, null, " ");
   }
 
 }
