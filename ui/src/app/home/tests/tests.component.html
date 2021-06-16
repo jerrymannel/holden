@@ -1,24 +1,16 @@
 <div class="container-fluid">
 
 	<div class="row">
-		<div class="col-12 mb-2">
-			<h2 class="mb-3">
-				<i class="bi bi-check2-circle fs-4"></i>
-				<span> Tests</span>
-				<button class="btn btn-primary buttondoublewidth float-end" (click)="showForm()"> Add test</button>
-			</h2>
-			<hr>
-		</div>
-	</div>
-
-	<div class="row">
 
 		<div class="col text-center text-muted mt-5" *ngIf="tests?.length < 1">
 			<span>No tests defined</span>
 		</div>
 
-		<div class="col-2" *ngIf="tests?.length > 0">
-			<div class="list-group">
+		<div class="col-2">
+			<div class="list-group mb-2">
+				<button class=" btn btn-primary buttondoublewidth float-end" (click)="showForm()"> Add test</button>
+			</div>
+			<div class="list-group" *ngIf="tests?.length > 0">
 				<div class="list-group-item fakeLink" *ngFor="let test of tests"
 					[ngClass]="{'selected': selectedTestID == test._id}" (click)="selectTest(test._id)">
 					<span>{{test.name}}</span>
