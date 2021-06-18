@@ -1,17 +1,6 @@
 <div class="container-fluid">
 
 	<div class="row">
-		<div class="col-12 mb-2">
-			<h2 class="mb-3">
-				<i class="bi bi-braces fs-4"></i>
-				<span> Functions</span>
-				<button class="btn btn-primary buttondoublewidth float-end" (click)="showForm()"> Add function</button>
-			</h2>
-			<hr>
-		</div>
-	</div>
-
-	<div class="row">
 		<div class="col-3">
 			<div class="list-group" *ngIf="functions.length > 0">
 				<div class="list-group-item fakeLink" *ngFor="let fn of functions"
